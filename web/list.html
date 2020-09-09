@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html lang="en-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="Keywords" content="关键字" />
+<meta name="Description" content="网站内容描述" />
+<title>风光无限</title>
+<link rel="stylesheet" href="css/comm.css" />
+<link rel="stylesheet" href="css/list.css" />
+<script src="js/jquery-1.8.0.min.js"></script>
+<script src="js/comm.js"></script>
+<script src="js/index.js"></script>
+<script src="js/jquery.lazyload.min.js"></script>
+<script src="js/jquery.backstretch.js"></script>
+<!--<img class="lazy" data-original="images/pic/17.jpg" src="images/pic/logo.gif" width="765" height="574">-->
+</head>
+<body>
+<header id="header">
+	<div class="navbar">
+		<div class="logo l"><span id="zs_nav"><em></em><em></em><em></em></span><a href="#"><img src="images/pic/logo.gif" /><img src="images/pic/logo.gif" /></a></div>
+		<nav id="nav">
+			<a href="#">
+				<div class="img"><img src="images/00.png"></div>
+				<div class="txt">HOME</div>
+			</a><a href="#">
+				<div class="img"><img src="images/02.png"></div>
+				<div class="txt">WEB前端</div>
+			</a><a href="#">
+				<div class="img"><img src="images/04.png"></div>
+				<div class="txt">摄影部落</div>
+			</a><a href="#" class="active">
+				<div class="img"><img src="images/03.png"></div>
+				<div class="txt">风光无限</div>
+			</a><a href="#">
+				<div class="img"><img src="images/01.png"></div>
+				<div class="txt">ABOUT</div>
+			</a>
+		</nav>
+	</div>
+</header>
+<script>
+$(function(){
+	var hei = $(window).height();
+	var wid = $(window).width();
+	$("#lits_sec").width(wid);
+	$("#bg_lits_sec").width(wid-20);
+	$("#bg_lits_sec,#list_con").height(hei-100);
+	$("#lits_sec").height(hei-80);
+	$(window).resize(function(){
+		hei = $(window).height();
+		wid = $(window).width();
+		$("#bg_lits_sec,#list_con").height(hei-100);
+		$("#lits_sec").height(hei-80);
+		$("#bg_lits_sec").width(wid-20);
+		$("#lits_sec").width(wid);
+	});
+	$.backstretch("images/pic/1.jpg", {speed: 500});
+	var len = $("#lits_sec img").length;
+	var an_time = 500;
+	var page = 1;
+	var fn_animate;
+	function img_next(){
+		if(!$("#lits_sec img").is(":animated")){
+			if(page<len){
+				$("#lits_sec img").eq(page).animate({"opacity":1},an_time).eq(page-1).animate({"opacity":0},an_time);
+				page++;
+			}else{
+				page = 1;
+				$("#lits_sec img").eq(page).animate({"opacity":1},an_time).eq(len-1).animate({"opacity":0},an_time);
+			};
+		};
+	};
+	function img_prev(){
+		if(!$("#lits_sec img").is(":animated")){
+			if(page == 1){
+				$("#lits_sec img").eq(len-1).animate({"opacity":1},an_time).eq(page-1).animate({"opacity":0},an_time);
+				page = len;
+			}else{
+				$("#lits_sec img").eq(page-1).animate({"opacity":1},an_time).eq(page).animate({"opacity":0},an_time);
+				page--;
+			};
+		};
+	};
+	$(".nextslide").click(function(){
+		img_next();
+	});
+	$(".prevslide").click(function(){
+		img_prev();
+	});
+	fn_animate = setInterval(img_next,3000);
+	$(".pauseplay").click(function(){
+		if($(this).hasClass("nopauseplay")){
+			fn_animate = setInterval(img_next,3000);
+			$(this).removeClass("nopauseplay");
+		}else{
+			clearInterval(fn_animate);
+			$(this).addClass("nopauseplay");
+		}
+	});
+	$(".hide-slider").click(function(){
+		if($(this).hasClass("show-slider")){
+			$(this).removeClass("show-slider");
+		}else{
+			$(this).addClass("show-slider");
+		}
+	});
+	$(".tupjq_sec article").hover(function(){
+		$(this).find("div.ar_kk").removeClass("dn");
+	},function(){
+		$(this).find("div.ar_kk").addClass("dn");
+	})
+	
+	
+});
+</script>
+<section id="list">
+	<div id="bg_lits_sec"></div>
+	<section id="lits_sec">
+		<img src="images/pic/1.jpg" />
+		<img src="images/pic/2.jpg" />
+	</section>
+</section>
+<section id="list_con">
+	<section class="rel seckk">
+		<nav id="zs_nav">
+			<strong></strong>
+		</nav>
+		<section class="tupjq_sec abs">
+			<article>
+				<img src="images/pic/image1.jpg" />
+				<a href="#" class="title">夜色梅林</a>
+				<div class="ar_kk abs dn">
+					<a class="fangda" href="#"></a>
+					<a class="alink" href="#"></a>
+				</div>
+			</article>
+			<article>
+				<img src="images/pic/image1.jpg" />
+				<a href="#" class="title">夜色梅林</a>
+				<div class="ar_kk abs dn">
+					<a class="fangda" href="#"></a>
+					<a class="alink" href="#"></a>
+				</div>
+			</article>
+			<article>
+				<img src="images/pic/image1.jpg" />
+				<a href="#" class="title">夜色梅林</a>
+				<div class="ar_kk abs dn">
+					<a class="fangda" href="#"></a>
+					<a class="alink" href="#"></a>
+				</div>
+			</article>
+			<article>
+				<img src="images/pic/image1.jpg" />
+				<a href="#" class="title">夜色梅林</a>
+				<div class="ar_kk abs dn">
+					<a class="fangda" href="#"></a>
+					<a class="alink" href="#"></a>
+				</div>
+			</article>
+		</section>
+		<div class="abs bottom_play">
+			<span class="prevslide"></span>
+			<span class="pauseplay"></span>
+			<span class="nextslide"></span>
+			<span class="hide-slider"></span>
+		</div>
+	</section>
+</section>
+<!--<section class="bgw_sec dn">
+	<footer id="footer">
+		<section class="fot_sec2"><p>© 2013 GAGA</p><span id="ico_top">top</span></section>
+	</footer>
+</section>
+-->
+</body>
+</html>

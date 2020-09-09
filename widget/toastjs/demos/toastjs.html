@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>toastjs弹出提示</title>
+<style>
+    body{
+        margin: 0;
+        background: rgba(0,0,0,.3);
+    }
+    .buttons{
+        margin: 100px auto;
+        text-align: center;
+    }
+    .link-button{
+        display: block;
+        padding: 1em 1em;
+        background: #FFF;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #666;
+        margin: 1em 1em;
+    }
+</style>
+</head>
+<body>
+    
+    <div class="buttons">
+
+        <a href="javascript:;" class="link-button" 
+            onclick="toast('toastjs弹出提示')">弹出提示</a>
+
+        <a href="javascript:;" class="link-button"
+            onclick="toast('2秒后关闭', 2000);">2秒后关闭</a>
+
+        <a href="javascript:;" class="link-button"
+            onclick="showMsg()">消失后显示回调函数</a>
+    </div>
+
+    <script src="../build/toastjs.min.js"></script>
+    <script>
+        function showMsg(){
+            toast('toastjs弹出提示', 2000, function() {
+                console.log('toastjs弹出提示')
+            });
+        };
+    </script>
+</body>
+</html>

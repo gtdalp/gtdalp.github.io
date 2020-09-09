@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>计时器</title>
+<link rel="stylesheet" type="text/css" href="../../css/base.css" />
+<script src="../../jslib/zepto.min.js"></script>
+<style type="text/css">
+
+html,body{
+    height:100%;
+    background: #101010;
+}
+#timeer{
+    margin-top:50px;
+    text-align: center;
+    font-size:50px;
+    color:#fff;
+}
+.Startp{
+    padding-top:50px;
+}
+.Startp-a{
+    color:#fff;
+    font-size:50px;
+}
+.Startp-a:active{
+    color:#4579D4;
+}
+</style>
+</head>
+<body>
+<div id="timeer">
+    <span class="h">0</span> 时 <span class="m">0</span> 分 <span class="s">0</span> 秒
+</div>
+<p class="Startp tc"><a href="###" class="Startp-a">Start</a></p>
+<script>
+$(function () {
+    var flg = true;
+    function ts (n) {
+        return n.toString().split('.')[0];
+    }
+    var d = new Date().getTime()
+    var Timer = function () {
+        var s = new Date().getTime();
+        var m = ts((s - d)/1000);
+        var M = ts(m/60);
+        $('#timeer .m').html( M );
+        $('#timeer .s').html( m - (M*60) );
+        setTimeout(function() {
+            Timer()
+        }, 1000);
+    }
+    $('.Startp-a').click(function () {
+        if (flg) {
+            flg = false;
+            d = new Date().getTime();
+            Timer();
+        }
+    });
+});
+
+</script>
+</body>
+</html>

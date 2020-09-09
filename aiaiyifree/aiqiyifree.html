@@ -1,0 +1,68 @@
+<html>
+<head>
+    <title>在上方输入视频地址后按Alt+数字1-6选择解析接口后即可观看。    VIP视频支持爱奇艺，芒果TV，优酷，腾讯，乐视等</title>
+    <script>
+    var num = 0;
+    function Tip(val) {
+        console.log(val)
+        // alert("提交视频地址后，按All+数字1-6选择解析接口")
+    }
+
+    function Keytest(keyCode) {
+        
+        var link = '';
+        if (keyCode == '线路1') {
+            link = 'www.wmxz.wang/video.php';
+        }
+
+        if (keyCode == '线路2') {
+            link = 'mt2t.com/yun';
+        }
+
+        if (keyCode == '线路3') {
+            link = 'vip.sdyhy.cn/ckflv/';
+        }
+
+        if (keyCode == '线路4') {
+            link = 'player.gakui.top/';
+        }
+
+        if (keyCode == '线路5') {
+            link = 'www.vipjiexi.com/yun.php/yun.php';
+        }
+
+        if (keyCode == '线路6') {
+            link = 'www.xiguaso.com/api/index.php';
+        }
+
+        if (link) {
+            document.getElementById("video_iframe").src = 'http://' + link + '?url=' + document.getElementById('link').value;
+            num = 0;
+        }
+
+    }
+    </script>
+</head>
+<style>
+.btn{width:100px; line-height:40px; background-color:#00a0e9; border:1px solid #FFF; display:block; float:left; color:#fff;cursor: pointer;margin:10px 5px 0 0;border:none;}
+#link{border:1px solid #00a0e9; width:800px; line-height:30px; padding:6px; display:block; float:left;}
+</style>
+<body>
+    <div style="overflow:hidden; margin: 0 auto; width:800px;padding:10px">
+        <input type="text" id="link" placeholder="请输入VIP视频支持爱奇艺，芒果TV，优酷，腾讯，乐视等网址观看,点击选择线路即观看。" />
+        <p style="clear:both;">
+        <input type="button" value="线路1" class="btn" onclick="Keytest(this.value)"  />
+        <input type="button" value="线路2" class="btn" onclick="Keytest(this.value)"  />
+        <input type="button" value="线路3" class="btn" onclick="Keytest(this.value)"  />
+        <input type="button" value="线路4" class="btn" onclick="Keytest(this.value)"  />
+        <input type="button" value="线路5" class="btn" onclick="Keytest(this.value)"  />
+        <input type="button" value="线路6" class="btn" onclick="Keytest(this.value)"  />
+        </p>
+    </div>
+    <div style="overflow:hidden; margin: 0 auto; width:800px;">
+        <iframe id="video_iframe" src="" style="height:500px;width:800px;frameborder:0;marginheight:0px;marginwidth:0px;background:#000000;border:2px solid #00a0e9">
+        </iframe>
+    </div>
+</body>
+
+</html>

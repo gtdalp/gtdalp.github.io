@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="user-scalable=no, width=device-width, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="format-detection" content="telephone=no" />
+<title>学位英语</title>
+<link rel="stylesheet" type="text/css" href="../css/comm.css">
+<link rel="stylesheet" type="text/css" href="style.css">
+<script src="../js/jquery-1.8.0.min.js"></script>
+<script src="timu.js"></script>
+<!-- <script src="level3-1.js" id="level3-script"></script> -->
+<style>
+.radio-ul>li span{
+    float:left;
+    margin-right:50px;
+}
+</style>
+</head>
+<body>
+<h3 class="title-h3" id="title-h3"></h3>
+<ul class="radio-ul"></ul>
+<script>
+	// 获取url key
+var getUrlKey = function (isCurrentHref) {
+    // extend object
+    var extend = function () {
+      var args = arguments,
+        deep = false,
+        dest;
+
+      if (typeof args[0] === 'boolean') {
+        deep = Array.prototype.shift.call(args);
+      };
+
+      dest = Array.prototype.shift.call(args);
+      Array.prototype.forEach.call(args, function (src) {
+        Object.keys(src).forEach(function (key) {
+          if (deep && typeof src[key] === 'object' && typeof dest[key] === 'object') {
+            extend(true, dest[key], src[key]);
+          } else if (typeof src[key] !== 'undefined') {
+            dest[key] = src[key];
+          };
+        });
+      });
+
+      return dest;
+    };
+
+	// url处理
+	var urls = {
+
+		// 把url字符串解析为对象
+		parse : function (url)  {
+		var query = {},
+			hash = {};
+
+		// 把 url 分隔成3段：path, query, hash
+		url = (url || location.href).split(/\?|\#/);
+
+		// 解析 query
+		(url[1] || '').split('&').forEach(function (n) {
+			if (!n[0]) return;
+			n = n.split('=');
+			query[n[0]] = n[1] || '';
+		});
+
+		// 解析 hash
+		(url[2] || '').split('&').forEach(function (n) {
+			if (!n[0]) return;
+			n = n.split('=');
+			hash[n[0]] = n[1] || '';
+		});
+
+		url = {
+			path: url[0],
+			query: query,
+			hash: hash
+		};
+
+		url.toString = function () {
+			return urls.stringify(this);
+		};
+
+		return url;
+		},
+
+		// 把url对象拼接为字符串
+		stringify : function (cfg)  {
+		var s = cfg.path,
+			query = [],
+			hash = [];
+
+		// 拼接query
+		if (cfg.query) {
+			Object.keys(cfg.query).forEach(function (n) {
+			if (cfg.query[n]) {
+				query.push(n + '=' + cfg.query[n]);
+			} else {
+				query.push(n);
+			}
+			});
+			if (query.length) {
+			s += '?' + query.join('&');
+			};
+		};
+
+		// 拼接hash
+		if (cfg.hash) {
+			Object.keys(cfg.hash).forEach(function (n) {
+			if (cfg.hash[n]) {
+				hash.push(n + '=' + cfg.hash[n]);
+			} else {
+				hash.push(n);
+			}
+			});
+			if (hash.length) {
+			s += '#' + hash.join('&');
+			};
+		};
+
+		return s;
+		},
+
+		// 合并两个url对象，并返回url字符串
+		merge : function (dest, src)  {
+		if (typeof dest === 'string') {
+			dest = urls.parse(dest);
+		};
+
+		if (typeof src === 'string') {
+			src = urls.parse(src);
+		};
+
+		if (!src.path) {
+			delete src.path;
+		};
+
+		return extend(true, dest, src).toString();
+		}
+	};
+	// 如果为空则直接返回当前url
+    if (!isCurrentHref) {
+      return urls.parse().query;
+    } else {
+      return urls;
+    }
+}
+var getkey = getUrlKey();
+var index = getkey.type;
+var show = getkey.show;
+var nArr = ['一', '二', '三', '四', '五', '六',]
+
+var head = document.getElementsByTagName('head')[0]; 
+var script = document.createElement('script'); 
+script.type = 'text/javascript'; 
+script.src = 'level3-' + index + '.js'; 
+head.appendChild(script); 
+
+$(function () {
+	setTimeout(function () {
+		var n = nArr[index-1];
+		document.title = '学位英语-第' + n + '套题目';
+		
+		document.getElementById('title-h3').innerHTML = '第' + n + '解套题目阅读理解'
+
+		tplReading(readingJson);
+	    $('.radio-ul>li>p>span').click(function(){
+	        $(this).addClass('active').siblings().removeClass('active');
+		});
+		
+		if (show == 1) {
+			$('.selected span').each(function () {
+				var flg = $(this).attr('data-true');
+				if (flg == 1) {
+					$(this).addClass('active')
+				}
+			});
+		}
+	}, 1000);
+});
+</script>
+</body>
+</html>

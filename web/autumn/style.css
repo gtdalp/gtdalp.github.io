@@ -1,0 +1,57 @@
+.title-h3{
+    padding:10px 10px  0;
+    font-size:16px;
+}
+.radio-ul{
+    font-family: '微软雅黑';
+    padding:10px;
+    font-size:14px;
+}
+.radio-ul>li{
+    margin-top:35px;
+    overflow:hidden;
+}
+.radio-ul>li .title{
+    margin-top:20px;
+    font-weight:bold;
+    font-size:18px;
+}
+.radio-ul>li .title+p>span:first-child{
+    margin-left:0;
+}
+.radio-ul>li span{
+    margin:0 20px;
+    cursor:pointer;
+}
+.radio-ul>li span.active{
+    font-weight:bold;
+    color:#f00;
+}
+.radio-ul>li span.active[data-true="1"]{
+    color:green;
+    font-size:16px;
+}
+.radio-ul>li .miaoshu{
+    padding-bottom: 10px;
+    font-size:15px;
+    line-height: 24px;
+}
+.col-red{
+    font-weight: bold;
+    color:red;
+}
+.translation{
+    padding-top:20px;
+    color:#999;
+}
+.selected{
+    padding-top:15px;
+}
+.selected label{
+    font-size:16px;
+    color:#c00;
+}
+.answer-yuedu span{
+    display: block;
+    margin:0 0 10px 0!important;
+}

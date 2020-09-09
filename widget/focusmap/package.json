@@ -1,0 +1,28 @@
+{
+  "name": "focusmap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gtdalp/focusmap.git"
+  },
+  "author": "xisa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gtdalp/focusmap/issues"
+  },
+  "homepage": "https://github.com/gtdalp/focusmap#readme",
+  "devDependencies": {
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^3.0.1",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.7"
+  }
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html lang="en-CN">
+<head>
+<meta charset="utf-8" />
+<title>支付宝首页焦点图</title>
+<script src="../src/jslib/jquery.min.js"></script>
+<script src="../dist/js/focusmap.min.js"></script>
+</head>
+<body>
+<div class="focusmap" style="height:400px;"></div>
+<script>
+var f = new Focusmap('.focusmap', {
+	// 每隔多少毫秒播放一次
+	time: 3000,
+	// 动画过渡时间 默认1000毫秒
+	transitionTime: 1000,
+	// 数据
+	data: [
+		{src: '../src/images/1.jpg', href: 'https://github.com/gtdalp'},
+		{src: '../src/images/2.jpg', href: 'https://github.com/'},
+		{src: '../src/images/3.jpg', href: 'https://github.com/gtdalp'},
+		{src: '../src/images/4.jpg', href: 'https://github.com/'}
+	]
+});
+// 销毁
+// f.destroy();
+</script>
+</body>
+</html>

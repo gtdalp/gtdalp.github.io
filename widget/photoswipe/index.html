@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<meta name="viewport" content="user-scalable=no, width=device-width, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="format-detection" content="telephone=no" />
+<title>PhotoSwipe: Responsive JavaScript Image Gallery</title>
+<link href="dist/photoswipe.css?v=4.1.1-1.0.4" rel="stylesheet" />
+<link href="dist/default-skin/default-skin.css?v=4.1.1-1.0.4" rel="stylesheet" />    
+<script src="dist/photoswipe.min.js?v=4.1.1-1.0.4"></script>
+<script src="dist/photoswipe-ui-default.min.js?v=4.1.1-1.0.4"></script>
+<script src="dist/photoswipepackage.js"></script>
+</head>
+<body>
+<div id="demogallery">
+    <div id="demo-test-gallery" class="demo-gallery">
+    </div>
+</div>
+<script type="text/javascript">
+(function() {
+    
+    var arr = [
+        {
+            // 大图片
+            maxImgSrc1: 'https://farm4.staticflickr.com/3894/15008518202_c265dfa55f_h.jpg',
+            // 图片的宽度和高度必须要指定 格式也是固定
+            maxImgSrc1wh: '1600x1600',
+            maxImgSrc2: 'https://farm4.staticflickr.com/3894/15008518202_b016d7d289_b.jpg',
+            // 图片的宽度和高度必须要指定 格式也是固定
+            maxImgSrc2wh: '1024x1024',
+            // 小图片
+            minImgSrc: 'https://farm4.staticflickr.com/3894/15008518202_b016d7d289_m.jpg',
+            // 作者
+            // author: 'Folkert Gorter',
+            // 简介
+            msg: 'This is dummy caption.'
+        },
+        {
+            // 大图片
+            maxImgSrc1: 'https://farm6.staticflickr.com/5591/15008867125_b61960af01_h.jpg',
+            // 图片的宽度和高度必须要指定 格式也是固定
+            maxImgSrc1wh: '1600x1068',
+            // 小图片
+            minImgSrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg'
+        },
+        {
+            // 大图片
+            maxImgSrc1: 'https://farm4.staticflickr.com/3920/15008465772_d50c8f0531_h.jpg',
+            // 图片的宽度和高度必须要指定 格式也是固定
+            maxImgSrc1wh: '1600x1067',
+            maxImgSrc2: 'https://farm4.staticflickr.com/3920/15008465772_383e697089_b.jpg',
+            // 图片的宽度和高度必须要指定 格式也是固定
+            maxImgSrc2wh: '1024x683',
+            // 小图片
+            minImgSrc: 'https://farm4.staticflickr.com/3920/15008465772_383e697089_m.jpg',
+            // 作者
+            author: 'Folkert Gorter2',
+            // 简介
+            msg: 'It\'s a dummy caption. He who searches for meaning here will be sorely disappointed.'
+        }
+    ]
+
+    // 创建模板
+    var demoGallery = document.querySelector('.demo-gallery');
+    demoGallery.innerHTML = photoswipe.createImgTpl(arr);
+
+    // 初始化 查找.demo-gallery区域下面所有符合放大图片的元素
+    photoswipe.init('.demo-gallery');
+})();
+</script>
+<style>
+#demogallery{
+    margin:30px auto;
+    width: 300px;
+    height:300px;
+    overflow:hidden;
+}
+#demo-test-gallery a{
+    float:left;
+    margin:0 2px 2px;
+    width: 120px;
+}
+#demo-test-gallery a img{
+    width:100%;
+}
+#demo-test-gallery a figure{
+    display: none;
+}
+#demo-test-gallery a:first-child{
+    width:164px;
+}
+</style>
+</body>
+</html>

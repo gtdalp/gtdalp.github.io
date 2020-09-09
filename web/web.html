@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html lang="en-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="Keywords" content="尜尜爱摄影 尜尜 摄影 风景摄影 微距摄影 前端 html5 css3 前端设计" />
+<meta name="Description" content="尜尜爱摄影" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" />
+<title>web前端</title>
+<link rel="stylesheet" href="css/comm.css" />
+<link rel="stylesheet" href="css/web.css" />
+<script src="js/jquery-1.8.0.min.js"></script>
+<script src="js/comm.js"></script>
+<script src="js/jquery.lazyload.min.js"></script>
+<script src="js/jquery.imagesloaded.js"></script>
+<script src="js/jquery.wookmark.js"></script>
+
+<!--<img class="lazy" data-original="images/pic/17.jpg" src="images/pic/logo.gif" width="765" height="574">-->
+<script>
+$(function(){
+	// 标签云
+	function random(min,max){ // 随机整数
+		return Math.floor(min+Math.random()*(max-min));
+	}; 
+	var len = $(".biaoq a").length;
+	var arr_color = ["#fff","#111","#000"];
+	var arr_bgcolor = ["#B45B3E","#336699","#00B271","#EFEFDA","#E8D098","#F0DAD2","#746386","#FF9966","#996600","#CCCC00","#CC6600","#999999","#99CC99","#FFFF99","#CCFFCC","#00CC00","#CCCC66","#336666","#99CC33","#CC9900","#339933"];
+	for(var i = 0;i<len;i++){
+		$(".biaoq a").eq(i).css({"font-size":random(12,26),"color":arr_color[random(1,arr_color.length)],"background":arr_bgcolor[random(1,arr_bgcolor.length)]})
+	};
+});
+(function ($){
+  $('#web_sec_l').imagesLoaded(function() {
+	var handler = null;
+	var options = {
+	  autoResize: true, // This will auto-update the layout when the browser window is resized.
+	  container: $('#web_sec_l'), // Optional, used for some extra CSS styling
+	  offset: 0, // Optional, the distance between grid items
+	};
+	function applyLayout() {
+	  $('#web_sec_l').imagesLoaded(function() {
+		// Destroy the old handler
+		if (handler.wookmarkInstance) {
+		  handler.wookmarkInstance.clear();
+		}
+		handler = $('#web_sec_l figure');
+		handler.wookmark(options);
+	  });
+	}
+	function onScroll(event) {
+	  var winHeight = window.innerHeight ? window.innerHeight : $(window).height(); // iphone fix
+	  var closeToBottom = ($(window).scrollTop() + winHeight > $(document).height() - 100);
+	  if (closeToBottom) {
+		var items = $('#web_sec_l figure'),firstTen = items.slice(0, 1);
+		$('#web_sec_l').append(firstTen.clone());
+		applyLayout();
+	  }
+	};
+	$(window).bind('scroll', onScroll);
+	handler = $('#web_sec_l figure');
+	handler.wookmark(options);
+  });
+})(jQuery);
+</script>
+<!--[if lt IE 9]> <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script> <![endif]-->
+</head>
+<body>
+<header id="header">
+	<div class="navbar">
+		<div class="logo l"><span id="zs_nav"><em></em><em></em><em></em></span><a href="#"><img src="images/pic/logo.gif" /><img src="images/pic/logo.gif" /></a></div>
+		<nav id="nav">
+			<a href="index.html">
+				<div class="img"><img src="images/00.png"></div>
+				<div class="txt">HOME</div>
+			</a><a href="web.html" class="active">
+				<div class="img"><img src="images/02.png"></div>
+				<div class="txt">WEB前端</div>
+			</a><a href="buluo.html">
+				<div class="img"><img src="images/04.png"></div>
+				<div class="txt">摄影部落</div>
+			</a><a href="#">
+				<div class="img"><img src="images/03.png"></div>
+				<div class="txt">风光无限</div>
+			</a><a href="about.html">
+				<div class="img"><img src="images/01.png"></div>
+				<div class="txt">ABOUT</div>
+			</a>
+		</nav>
+	</div>
+</header>
+<section class="bgw_sec">
+	<section class="sec_cont mc">
+		<section id="web_sec_l">
+			<figure class="figure_lb">
+				<h3><a href="#">响应式布局这件小事</a></h3>
+				<p class="plt_p"><span class="pingl"><i class="icopl"></i><a href="#">100</a>评论</span><time><i class="icotime"></i>2014-1-9 11:30:55</time><span  class="name"><i class="iconame"></i><a href="#">尜尜</a></span></p>
+				<a href="#"><img src="images/pic/4.jpg" /></a>
+				<p class="p_txt"><a href="#">讲到<a target="_blank" title="查看响应式布局中的全部文章" href="http://www.jiawin.com/tag/%e5%93%8d%e5%ba%94%e5%bc%8f%e5%b8%83%e5%b1%80/">响应式布局</a>
+，相信大家都有一定的了解，响应式布局是今年很流行的一个设计理念，随着移动互联网的盛行，为解决如今各式各样的浏览器分辨率以及不同移动设备的显示效果，设计师提出了响应式布局的设计方案。今天就和大家来讲讲响应式布局这件小事，包含什么是响应式布局、响应式布局的优点和缺点以及响应式布局该怎么设计（通过
+实现响应布局）。</a></p>
+				<p class="more"><a href="#">more</a></p>
+			</figure>
+			<figure class="figure_lb">
+				<h3><a href="#">响应式布局这件小事</a></h3>
+				<p class="plt_p"><span class="pingl"><i class="icopl"></i><a href="#">100</a>评论</span><time><i class="icotime"></i>2014-1-9 11:30:55</time><span  class="name"><i class="iconame"></i><a href="#">尜尜</a></span></p>
+				<a href="#"><img src="images/pic/4.jpg" /></a>
+				<p class="p_txt"><a href="#">讲到<a target="_blank" title="查看响应式布局中的全部文章" href="http://www.jiawin.com/tag/%e5%93%8d%e5%ba%94%e5%bc%8f%e5%b8%83%e5%b1%80/">响应式布局</a>
+，相信大家都有一定的了解，响应式布局是今年很流行的一个设计理念，随着移动互联网的盛行，为解决如今各式各样的浏览器分辨率以及不同移动设备的显示效果，设计师提出了响应式布局的设计方案。今天就和大家来讲讲响应式布局这件小事，包含什么是响应式布局、响应式布局的优点和缺点以及响应式布局该怎么设计（通过
+实现响应布局）。</a></p>
+				<p class="more"><a href="#">more</a></p>
+			</figure>
+		</section>
+		<section id="web_sec_r">
+			<figure class="figure_r">
+				<h3>搜索</h3>
+				<p><input type="submit" class="btn_suos" value="搜索" /><input type="text" class="txt" /></p>
+			</figure>
+			<dl class="new_dl">
+				<dt>最新文章</dt>
+				<dd><a href="#">响应式布局这件小事！</a></dd>
+				<dd><a href="#">响应式设计是神马?</a></dd>
+				<dd><a href="#">响应式设计是神马?</a></dd>
+				<dd><a href="#">响应式设计是神马?</a></dd>
+				<dd><a href="#">响应式设计是神马?</a></dd>
+				<dd><a href="#">响应式设计是神马?</a></dd>
+			</dl>
+			<dl class="new_dl new_dl1">
+				<dt>文章类别</dt>
+				<dd><a href="#">响应式设计</a></dd>
+				<dd><a href="#">html5+css5</a></dd>
+				<dd><a href="#">javascript</a></dd>
+				<dd><a href="#">web前端</a></dd>
+				<dd><a href="#">前端设计</a></dd>
+				<dd><a href="#">视觉设计</a></dd>
+			</dl>
+			<article class="biaoq cl">
+				<a href="#">html5</a><a href="#">css3</a><a href="#">扁平式设计</a><a href="#">摄影</a><a href="#">微距</a><a href="#">html5</a><a href="#">css3</a><a href="#">扁平式设计</a><a href="#">摄影</a><a href="#">微距</a><a href="#">html5</a><a href="#">css3</a><a href="#">扁平式设计</a><a href="#">摄影</a><a href="#">微距</a><a href="#">html5</a><a href="#">css3</a><a href="#">扁平式设计</a><a href="#">摄影</a><a href="#">微距</a><a href="#">html5</a><a href="#">css3</a><a href="#">扁平式设计</a><a href="#">摄影</a><a href="#">微距</a>
+			</article>
+		</section>
+		<div class="cl"></div>
+	</section>
+	<footer id="footer">
+		<section class="fot_sec2"><p>© 2013 GAGA</p><span id="ico_top">top</span></section>
+	</footer>
+</section>
+</body>
+</html>

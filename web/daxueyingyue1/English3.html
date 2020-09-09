@@ -1,0 +1,507 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="user-scalable=no, width=device-width, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="format-detection" content="telephone=no" />
+<title>大学英语1-第三组</title>
+<link rel="stylesheet" type="text/css" href="../css/comm.css">
+<link rel="stylesheet" type="text/css" href="../style.css">
+<script src="../js/jquery-1.8.0.min.js"></script>
+<script src="../timu.js"></script>
+<script>
+$(function () {
+    $('.radio-ul>li>p>span').click(function(){
+        $(this).addClass('active').siblings().removeClass('active');
+    });
+});
+</script>
+<style>
+.radio-ul>li span{
+    float:left;
+    margin-right:50px;
+}
+.biaoti{
+    padding-top:20px;
+}
+.biaoti-span{
+    padding-top:10px;
+}
+.biaoti-span em{
+    margin-right:50px;
+    padding:0 15px;
+}
+.biaoti{
+    margin-bottom:10px;
+    font-weight:bold;
+    font-size:18px;
+}
+.biaoti em{
+    font-weight: normal;
+    font-size:16px;
+}
+
+.radio-ul>li.radio-li span{
+    display: block;
+    float:none;
+}
+.four-div-cont .ask-p.active,
+.biaoti-span em.active,
+.radio-ul>li.selected-li span.active{
+    font-weight:bold;
+    color:green;
+}
+.four-div-cont .ask-p.error,
+.biaoti-span em.error,
+.radio-ul>li.selected-li span.error{
+    color:#f00;
+    font-size:16px;
+}
+.selected{
+    padding-top:15px;
+    overflow: hidden;
+}
+.radio-ul>li span{
+    font-size:16px;
+    font-weight: bold;
+}
+.four-li .title{
+    padding-top:20px;
+}
+.four-div-cont .ask-p{
+    line-height: 30px;
+    cursor: pointer;
+}
+</style>
+<script>
+$(function() {
+
+    var show = location.href.indexOf('show') > 0;
+    // 完词填空
+    $('.selected-li').each(function () {
+        var index = $(this).index()*5 + 1;
+        var ask = $(this).attr('data-ask').split('');
+        var arr = $(this).attr('data-arr').split(',');
+        var html = '';
+        for (var i = 0; i < 5; i++){
+            html += '<p class="selected cl" data-ask="' + ask[i] + '"><em class="l">' + (index + i) + '.</em>', zm = '', text = '';
+            for (var j = 0; j < 5; j++) {
+                if (j == 0) { zm = 'A';} 
+                else if (j == 1) { zm = 'B'; }
+                else if (j == 2) { zm = 'C'; }
+                else if (j == 3) { zm = 'D'; }
+                else if (j == 4) { zm = 'E'; }
+                html += '<span>' + zm + '. ' + arr[j] + '</span>';
+            }
+            html += '</p>';
+        }
+        $(this).append(html);
+    });
+    var selectedSpanFn = function (_this) {
+        var zm = $(_this).text().substr(0,1);
+        var ask = $(_this).parent().attr('data-ask');
+        $(_this).parent().find('span').removeClass('active error')
+        if (zm == ask) {
+            $(_this).addClass('active');
+        } else {
+            $(_this).addClass('error');
+        }
+    }
+    // 完词填空 点击
+    $('.selected-li .selected span').click(function () {
+        selectedSpanFn(this);
+    });
+    if (show) {
+        $('.selected-li .selected span').each(function () {
+            var zm = $(this).text().substr(0,1);
+            var ask = $(this).parent().attr('data-ask');
+            if (zm == ask) {
+                $(this).addClass('active');
+            }
+        });
+    }
+    // 判断题
+    $('.biaoti').each(function () {
+        var ask = $(this).attr('data-ask');
+        var html = '<span class="biaoti-span"><em' + (ask == 'T' ? ' data-true="1"' : '') + '>TTTTTTTT</em><em' + (ask == 'F' ? ' data-true="1"' : '') + '>FFFFFFFFFF</em></span>'
+        $(this).append(html);
+    });
+    var askfn = function (self, n) {
+        var ask = $(self).attr('data-true');
+        var d = 'em';
+        if (n == 1) {
+            d = 'p';
+        }
+        $(self).parent().find(d).removeClass('active error');
+        
+        if (ask == 1) {
+            $(self).addClass('active');
+        } else {
+            $(self).addClass('error');
+        } 
+    }
+    $('.biaoti-span em').click(function () {
+        askfn(this);
+    });
+    $('.four-div-cont .ask-p').click(function () {
+        askfn(this, 1);
+    });
+    
+    if (show) {
+        $('.selected-li .selected span').each(function () {
+            var zm = $(this).text().substr(0,1);
+            var ask = $(this).parent().attr('data-ask');
+            if (zm == ask) {
+                $(this).addClass('active');
+            }
+        });
+        $('.biaoti-span em').each(function () {
+            var ask = $(this).attr('data-true');
+            if (ask == 1) {
+                $(this).addClass('active');
+            }
+        });
+        $('.four-div-cont .ask-p').each(function () {
+            var ask = $(this).attr('data-true');
+            if (ask == 1) {
+                $(this).addClass('active');
+            }
+        });
+    }
+        
+})
+</script>
+</head>
+<body>
+<h3 class="title-h3">大学英语1-第三组</h3>
+<ul class="radio-ul">
+    <li class="radio-li">
+        <p class="miaoshu">
+            一.  阅读理解
+            A film crew was at the Circle Five Ranch to film a Marlboro commercial. This was in 1868, before they prohibited cigarette ads from American television. Darrell Winfield was watching the crew set up the equipment. The scene included an actor crossing a river on horseback, but when the time came to shoot, the man was too drunk to ride. Someone from the crew saw Winfield and asked him if he would ride the horse for 50 dollars. "Hell," said Winfield, "for 50 bucks, I'll jump that damn horse over the moon!" To people in many countries, Winfield is just a familiar but nameless face, a simple cowboy with an advertising message about a connection between the West and a brand of cigarettes. Few people know that he is 55, a family man who's been married to the same woman for 37 years and has 5 children and 7 grandchildren. Most surprisingly, he's a real, working cowboy who raises horses in his ranch in Wyoming. One of the most striking things about the Marlboro Man is that success hasn't changed him much. He says that complete strangers sometimes come up to him and say, "I've met you, know you from somewhere. "Whenever it happens, he says that he gets embarrassed.    
+        </p>
+        <p class="biaoti" data-ask="F">1.  When they filmed the ad, Winfield was too drunk. </p>
+        <p class="biaoti" data-ask="F">2.  From the passage, we know that Winfield was a rich man. </p>
+        <p class="biaoti" data-ask="T">3.  The word "prohibited" in the first paragraph mean "forbidden". </p>
+        <p class="biaoti" data-ask="T">4.  Marlboro commercials were allowed on television in America before 1868. </p>
+        <p class="biaoti" data-ask="T">5.  When people recognized Winfield, he felt uncomfortable.</p>
+    </li>
+    <li class="radio-li">
+        <p class="miaoshu">
+            3）.Do you forget to turn off the lights and heaters when you go out of a room? In 2040 it will not matter. They will turn themselves off and on again when you return. A sensor will detect the presence of a human and turn the systems on, and when the humans leave it will turn them off again. The sensors will work through the central home computer, and they will do much more than just turn the fires and lights on and off for you. They will detect faulty electrical appliances, isolate them so that they cannot harm anyone, and then warn you that they need repair. They will detect fire and if you are out of the house, the computer will call the firemen. It will also call the police, should the sensors detect an intruder（非法闯入者）. You will open the door using your personal card--the one you use for shopping--maybe using a number known only to you.
+        </p>
+        <p class="biaoti" data-ask="F">11. The author intends to tell the readers that in year 2040 there will be no switches for lights and heaters. </p>
+        <p class="biaoti" data-ask="F">12. The best title for the passage is "The Development of Science and Technology".</p>
+        <p class="biaoti" data-ask="F">13. Thanks to computers, in 2040 people will be controlled by computers.</p>
+        <p class="biaoti" data-ask="T">14. According to the passage, people will save much trouble with the help of advanced technology.</p>
+        <p class="biaoti" data-ask="T">15. According to the author, in 2040, new technology will free us from the keys we use today. </p>
+    </li>
+    <li class="radio-li">
+        <p class="miaoshu">
+            9）.A poor boy, who had not enough money to buy a meal, stopped one hot summer at noon before an eating-house. The boss of the restaurant told him several times to go away, but the boy could not leave the wonderful smell. At last, the cook came out of the restaurant. Taking hold of his arm, he declared that the boy had been feeding upon the smell of their food. He asked the boy to pay half the price of a meal. The poor fellow said that he neither could nor would pay. At that moment, a police happened to pass. He said to the boy, "You have been feasting one of senses with the good smell of this man's meat, you should satisfy one of his senses. How much money do you have?" "I have only two pence in all the world, sir and I must buy some bread." "Never mind," answered the policeman," Take your two pence between your hands. Now rattle them loudly." The boy did so, and the officer, turning to the cook, said, "Now, sir, I think he had paid you the smell of your delicious food. The smell of your food rewarded his nostrils（鼻孔） and the sound of his money rewarded your ears." This decision gave more satisfaction to the bystanders than to the cook, but it was the only payment he could get.
+        </p>
+        <p class="biaoti" data-ask="T">41. The cook asked the boy to give him some money for feeding on the smell of the food.</p>
+        <p class="biaoti" data-ask="F">42. The boy reported what happened to the police in the police station. </p>
+        <p class="biaoti" data-ask="T">43. The police asked the boy to make noises with the two pence. </p>
+        <p class="biaoti" data-ask="F">44. The cook finally got some money.</p>
+        <p class="biaoti" data-ask="F">45. The policeman was not satisfied with the solution. </p>
+    </li>
+    <li class="radio-li">
+        <p class="miaoshu">
+            11）.A young man who lived in London was in love with a beautiful girl. Soon she became his fiancée （未婚妻）. The man was very poor while the girl was rich. The young man wanted to make her a present on her birthday. He wanted to buy something beautiful for her, but he had no idea how to do it, as he had very little money. The next morning, he went to a shop. There were many fine things there: gold watches, diamond… but all these things were too expensive. There was one thing he could not take his eyes off. It was a beautiful vase. That was a suitable present for his fiancée. He had been looking at the vase for half an hour when the manager of the shop noticed him. The young man looked so pale, sad and unhappy that the manager asked what had happened to him. The young man told him everything. The manager felt sorry for him and decided to help him. A bright idea struck him. The manager pointed to the corner of the shop. To his great surprise the young man saw a vase broken into many pieces. The manager said: "When the servant enters the room, he will drop it." On the birthday of his fiancée the young man was very excited. Everything happened as had been planned. The servant brought in the vase, and as he entered the room, he dropped it. There was horror on everybody's face. When the box was opened, the guests saw that each piece was packed separately.
+        </p>
+        <p class="biaoti" data-ask="F">51. The story took place in the United States.</p>
+        <p class="biaoti" data-ask="T">52. The young man's family was poor while the beautiful girl is rich, according to the passage. </p>
+        <p class="biaoti" data-ask="F">53. The young man wanted to buy a present as a Christmas gift for the girl.</p>
+        <p class="biaoti" data-ask="F">54. The shop manager came to talk to the young man, because he was poorly dressed. </p>
+        <p class="biaoti" data-ask="F">55. On the birthday of his fiancée, the young man was excited because the girl was in love with him.</p>
+    </li>
+    <li class="radio-li">
+        <p class="miaoshu">
+            7）.One way that scientists learn about man is by studying animals, such as mice and monkeys. The scientists in this laboratory are experimenting on mice. They are studying the relationship between diet and health. At this time, over one hundred experiments are being done in this laboratory. In one of these experiments, the scientists are studying the relationship between the amount of food the mice eat and their health. The mice are in three groups. All three groups are receiving the same healthy diet. But the amount of food that each group is receiving is different. The first group is eating one cup of food each day, the second group is eating two cups, and the third group of mice is eating three cups. After three years, the healthiest group is the one that is only eating one cup of food each day. The mice in this group are thinner than normal mice. But they are more active. Most of the day, they are running, playing with one another, and using the equipment in their cages. Also, they are living longer. Mice usually live for two years. Most of the mice in this group are still alive after three years. The second group of mice is normal weight. They are healthy, too. They are active, but not as active as the thinner mice. But they are only living about two years, not the three years or more of the thinner mice. The last group of mice is receiving more food than the other two groups. Most of the day, these mice are eating or sleeping. They are not very active. These mice are living longer than the scientists thought - about a year and a half. But they aren't as healthy. They're sick more often than the other two groups.
+        </p>
+        <p class="biaoti" data-ask="F">31. The scientists in the laboratory are studying the relationship between the amount of food and diet.</p>
+        <p class="biaoti" data-ask="F">32. The first two groups are receiving the most food.</p>
+        <p class="biaoti" data-ask="F">33. The first group is the thinnest because they do not have a healthy diet.</p>
+        <p class="biaoti" data-ask="T">34. Normal mice usually live for two years. </p>
+        <p class="biaoti" data-ask="T">35. The text tells us that people who eat less and exercise more will live longer.</p>
+    </li>
+    <li class="radio-li">
+        <p class="miaoshu">
+            5）.Martin Luther King was a black minister, who became a great leader of the civil rights movement in the 1950s and 1960s. King was born on January 15, 1929 in Atlanta, Georgia. When he was young, he was strongly influenced by Thoreau and Indian leader Mahatma Gandhi's idea of non-violent resistance. Having received a PhD (Doctor of Philosophy) from Boston University, he became a political and religious leader of the non-violent civil relights movement in 1955. On August 28, 1963, he led over 250,000 Americans on a march in Washington D.C. to fight for the Civil Rights Law to guarantee equality for all people, and delivered his best known speech "I Have a Dream" before the Lincoln Memorial. The "dream" is a dream of brotherly love and equality for the Black and White. Thus, he was awarded the Nobel Prize for peace in 1964, but he was murdered four years later. Though he died, he was greatly respected and loved by the Americans, both the white and the black. By vote of Congress in 1968, the third Monday of every January is now a federal holiday in Luther King's honor. He lives in people's hearts forever.
+        </p>
+        <p class="biaoti" data-ask="T">21. Martin Luther King was murdered when he was 39 years old.</p>
+        <p class="biaoti" data-ask="F">22. Martin Luther King was a black minister only.</p>
+        <p class="biaoti" data-ask="T">23. Martin Luther King's Day has been a federal holiday for more than 40 years. </p>
+        <p class="biaoti" data-ask="T">24. The underlined word "delivered" in the second paragraph could be replaced by "gave".</p>
+        <p class="biaoti" data-ask="F">25. The best title for this passage is "Civil Rights Law".</p>
+    </li>
+    <li class="four-li">
+        <p class="miaoshu">2）.In the United States, it is not customary to telephone someone very early in the morning. If you telephone him early in the day, while he is shaving or having breakfast, the time of the call shows that the matter is very important and requires immediate attention. The same meaning is attached to telephone calls made after 11:00 pm. If someone receives a call during sleeping hours, he assumes it's a matter of life or death. The time chosen for the call communicates its importance. In social life, time plays a very important part. In the U.S.A. guests tend to feel they are not highly regarded if the invitation to a dinner party is extended only three or four days before the party date. But it is not true in all countries. In other areas of the world, it may be considered foolish to make an appointment too far in advance because plans which are made for a date more than a week away tend to be forgotten. The meaning of time differs in different parts of the world. Thus, misunderstandings arise between people from different cultures that treat time differently. Promptness is valued highly in American life, for example. If people are not prompt, they may be regarded as impolite or not fully responsible. In the U.S. no one would think of keeping a business associate waiting for an hour, it would be too impolite. A person, who is 5 minutes late, will say a few words of explanation, though perhaps he will not complete the sentence.</p>
+        <div class="four-div-cont"><p class="title">6.Which of the following time is proper if you want to make an appointment with your friend in the U.S. A.? </p>
+        <p class="ask-p">A. at 7:00 am</p>
+        <p class="ask-p" data-true="1">B. at 4:00 pm</p>
+        <p class="ask-p">C. at the midnight</p>
+        <p class="ask-p">D. at 4 am</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">7.What is the main idea of this passage?</p>
+        <p class="ask-p">A. It is not customary to telephone someone in the morning and in sleeping hours in the U.S.</p>
+        <p class="ask-p" data-true="1">B. The role of time in social life over the world.</p>
+        <p class="ask-p">C. If people are late, they may be regarded as impolite or not fully responsible in the U.S.</p>
+        <p class="ask-p">D. Not every country treats the concept of time as the same.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">8.From the passage we can safely infer that</p>
+        <p class="ask-p">A.  it's a matter of life or death if you call someone in day time.</p>
+        <p class="ask-p" data-true="1">B. the meaning of time differs in different parts of the world.</p>
+        <p class="ask-p">C. it makes no difference in the U.S. whether you are early or late for a business party.</p>
+        <p class="ask-p">D. if a person is late for a date, he needn't make some explanation.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">9.What does it mean in the passage if you call someone during his or her sleeping hours?</p>
+        <p class="ask-p">A. A matter of work.</p>
+        <p class="ask-p" data-true="1">B. A matter of life or death.</p>
+        <p class="ask-p">C. You want to see him or her.</p>
+        <p class="ask-p">D. You want to make an appointment with him or her.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">10. Which of the following statements is true according to the passage?</p>
+        <p class="ask-p">A. In the U.S.A. guests tend to feel they are highly regarded if the invitation to a dinner party is extended only three or four days before the party date.</p>
+        <p class="ask-p">B. No misunderstandings arise between people from different cultures about the concept of time.</p>
+        <p class="ask-p">C. It may be considered foolish to make an appointment well in advance in the U.S.A..</p>
+        <p class="ask-p" data-true="1">D. Promptness is valued highly in American life.</p>
+        </div>
+
+
+        <p class="miaoshu">4）.A foreigner's first impression of the U.S. is likely to be that everyone is in a rush - often under pressure. City people appear always to be hurrying to get where they are going restlessly, seeking attention in a store, and elbowing others as they try to complete their errands (任务). Racing through daytime meals is part of the pace of life in this country. Working time is considered precious. Others in public eating places are waiting for you to finish so that they too can be served and get back to work within the time allowed. Each person hurries to make room for the next person. If you don't, waiters will hurry you. You also find drivers will be abrupt and that people will push past you. You will miss smiles, brief conversations, and small courtesies with strangers. Don't take it personally. This is because people value time highly, and they resent someone else "wasting" it beyond a certain courtesy point. The view of time affects the importance we attach to patience. In the American system of values, patience is not a high priority. Many of us have what might be called "a short fuse." We begin to move restlessly about if we feel time is slipping away without some return - be this in terms of pleasure, work value, or rest. Those coming from lands where time is looked upon differently may find this matter of pace to be one of their most difficult adjustments in both business and daily life. Many newcomers to the States will miss the opening courtesy of a business call, for example, they will miss the ritual socializing that goes with a welcoming cup of tea or coffee that may be traditional in their own country. They may miss leisurely business chats in a café or coffeehouse. Normally, Americans do not assess their visitors in such relaxed surroundings over prolonged small talks. We seek out evidence of past performance rather than evaluate a business colleague through social courtesies. Since we generally assess and probe professionally rather than socially, we start talking business very quickly.</p>
+
+        <div class="four-div-cont"><p class="title">16. Which of the following statements is wrong?</p>
+        <p class="ask-p">A. Americans seem to be always under pressure.</p>
+        <p class="ask-p">B. Americans attach less importance to patience.</p>
+        <p class="ask-p">C. Americans don't care much about ritual socializing.</p>
+        <p class="ask-p" data-true="1">D. Americans are impolite to their business colleagues.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">17. In the fourth paragraph, "a high priority" means </p>
+        <p class="ask-p">A. a less important thing.</p>
+        <p class="ask-p" data-true="1">B. a first concern.</p>
+        <p class="ask-p">C. a good business.</p>
+        <p class="ask-p">D. an attractive gift.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">18. Americans evaluate a business colleague </p>
+        <p class="ask-p">A. through social courtesy</p>
+        <p class="ask-p">B.  through prolonged business talks</p>
+        <p class="ask-p">C. by establishing business relations</p>
+        <p class="ask-p" data-true="1">D. by learning about their past performance</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">19. This passage mainly talks about</p>
+        <p class="ask-p" data-true="1">A. how Americans treasure their time</p>
+        <p class="ask-p">B. how busy Americans are every day</p>
+        <p class="ask-p">C. how Americans do business with foreigners</p>
+        <p class="ask-p">D. what American way of life is like</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">20. We can infer from the passage that the author's tone in writing is</p>
+        <p class="ask-p">A. critical</p>
+        <p class="ask-p">B. ironical</p>
+        <p class="ask-p" data-true="1">C. praiseful</p>
+        <p class="ask-p">D. objective</p>
+        </div>
+
+
+        <p class="miaoshu">6）.It has been reported that in colleges across the United States, the daytime serial drama known as the soap opera has suddenly become "in". Between the hours of 11 a.m. and 4:30 pm, college television lounges are filled with soap opera fans who can't wait to see the next episode in the lives of their favorite characters. Actually, soaps are more than a college favorite; they're a youth favorite. When school is out, high-school students are in front of their TV sets. One young working woman admitted that she turned down a higher paying job rather than give up watching her favorite serials. During the 1960's, it was uncommon for young people to watch soap operas. The mood of the sixties was very different from now. It was a time of seriousness, and talk was about social issues of great importance. Now, seriousness has been replaced by fun. Young people want to be happy. It may seem strange that they should turn to soap opera, which is known for showing trouble in people's lives. But soap opera is enjoyment. Young people can identify with the soap opera character, who, like the college-age viewer, is looking for happy love, and probably not finding it. And soap opera gives young people a chance to feel close to people without having to bear any responsibility for their problems.</p>
+
+        <div class="four-div-cont"><p class="title">26. What is soap opera?</p>
+        <p class="ask-p">A. Plays based on science fiction stories.</p>
+        <p class="ask-p">B. Plays based on non-fiction stories.</p>
+        <p class="ask-p" data-true="1">C. The daytime serial dramas on TV.</p>
+        <p class="ask-p">D. Popular documentary films on TV.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">27. What can be the best title of the passage?</p>
+        <p class="ask-p">A. College students viewers.</p>
+        <p class="ask-p">B. Favorite TV serials.</p>
+        <p class="ask-p" data-true="1">C. Soap opera fans.</p>
+        <p class="ask-p">D. College-age viewers.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">28. Which is NOT the reason why the soap opera has suddenly become "in" among American young people ? </p>
+        <p class="ask-p">A. Because the viewers want to be happy and to enjoy themselves.</p>
+        <p class="ask-p">B. Because the soap opera makes young people feel close to their people.</p>
+        <p class="ask-p">C. Because the viewers can find themselves in the soap opera characters.</p>
+        <p class="ask-p" data-true="1">D. Because the young people have to bear the responsibilities for their troubles.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">29. What can we learn from the passage? </p>
+        <p class="ask-p">A. College students like soap operas more than any other social groups.</p>
+        <p class="ask-p">B. Young people of sixties liked soap operas more than people today.</p>
+        <p class="ask-p" data-true="1">C. Young viewers have turned themselves from the seriousness of sixties to enjoyment now.</p>
+        <p class="ask-p">D. The young as a whole are trying to look for happy love but in vain.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">30. What message does the author want to convey to us? </p>
+        <p class="ask-p">A. The people's favorites to drama works have been changed for a long time.</p>
+        <p class="ask-p" data-true="1">B. The people's favorites to drama works change along with the times.</p>
+        <p class="ask-p">C. The people's favorites to drama works is changed by the soap opera.</p>
+        <p class="ask-p">D. The people's favorites have changed the drama works.</p>
+        </div>
+
+        <p class="miaoshu">8）.The French Revolution broke out in 1789. At the time France was in a crisis. The government was badly run and people's lives were miserable. King Louis XIV tried to control the national parliament and raise more taxes. But his effort failed. He ordered his troops to Versailles. The people thought that Louis intended to put down the Revolution by force. On July 14, 1789, they stormed and took the Bastille, where political prisoners were kept. Ever since that day, July 14 has been the French National Day. Louis tried to flee the country in 1792, to get support from Austria and Prussia. However, he was caught and put in prison. In September 1792, the monarchy was abolished. In the same year, Louis was executed. A few months later his wife, Marie, also had her head cut off. The Revolution of France had frightened the other kings of Europe. Armies from Austria and Prussia began to march against France. The French raised republican armies to defend the nation. The Revolution went through a period of terror. Thousands of people lost their lives. In the end, power passed to Napoleon Bonaparte.</p>
+
+        <div class="four-div-cont"><p class="title">36. What's this passage about?</p>
+        <p class="ask-p">A. France.</p>
+        <p class="ask-p">B. King Louis.</p>
+        <p class="ask-p" data-true="1">C. The French Revolution.</p>
+        <p class="ask-p">D. Europe.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">37. Which did not happen in 1789?</p>
+        <p class="ask-p">A. The French Revolution broke out.</p>
+        <p class="ask-p" data-true="1">B. The national economy was developing rapidly.</p>
+        <p class="ask-p">C. The government wasn't well run.</p>
+        <p class="ask-p">D. King Louis XIV was in power.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">38. Where were the political prisoners kept? </p>
+        <p class="ask-p">A. In Versailles.</p>
+        <p class="ask-p">B. In Austria.</p>
+        <p class="ask-p">C. In Prussia.</p>
+        <p class="ask-p" data-true="1">D. In Bastille.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">39. What does the underlined word "abolished" mean? </p>
+        <p class="ask-p">A. Put off.</p>
+        <p class="ask-p">B. Established.</p>
+        <p class="ask-p">C. United.</p>
+        <p class="ask-p" data-true="1">D. Ended.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">40. What was NOT the effect of the Revolution? </p>
+        <p class="ask-p">A. July 14 has become the French National Day.</p>
+        <p class="ask-p">B. It brought some impact on the other European kings.</p>
+        <p class="ask-p">C. Louis's wife, Marie was killed.</p>
+        <p class="ask-p" data-true="1">D. The king tried to control the national parliament.</p>
+        </div>
+
+        <p class="miaoshu">10）.Community service is an important component of education here at our university. We encourage all students to volunteer for at least one community activity before they graduate. A new community program called "One On One" helps elementary students who've fallen behind. Your education majors might be especially interested in it because it offers the opportunity to do some teaching, that is, tutoring in math and English. You'd have to volunteer two hours a week for one semester. You can choose to help a child with math, English, or both. Half-hour lessons are fine, so you could do a half hour of each subject two days a week. Professor Dodge will act as a mentor to the tutors---he'll be available to help you with lesson plans or to offer suggestions for activities. He has office hours every Tuesday and Thursday afternoon. You can sign up for the program with him and begin the tutoring next week. I'm sure you'll enjoy this community service…and you'll gain valuable experience at the same time. It looks good on your resume, too, showing that you've had experience with children and that you care about your community. If you'd like to sign up, or if you have any questions, stop by Professor Dodge's office this week.</p>
+
+        <div class="four-div-cont"><p class="title">46. What is the purpose of the talk? </p>
+        <p class="ask-p">A. To explain a new requirement for graduation.</p>
+        <p class="ask-p" data-true="1">B. To interest students in a new community program.</p>
+        <p class="ask-p">C. To discuss the problems of elementary school students.</p>
+        <p class="ask-p">D. To recruit elementary school teachers for a special program.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">47. What is the purpose of the program that the dean describes? </p>
+        <p class="ask-p">A. To find jobs for graduating students.</p>
+        <p class="ask-p">B. To help education majors prepare for final exams.</p>
+        <p class="ask-p" data-true="1">C. To offer tutorials to elementary school students.</p>
+        <p class="ask-p">D. To provide funding for a community service project.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">48. What does Professor Dodge do?</p>
+        <p class="ask-p" data-true="1">A. He advises students to participate in the special program.</p>
+        <p class="ask-p">B. He teaches part-time in an elementary school.</p>
+        <p class="ask-p">C. He observes elementary school students in the classroom</p>
+        <p class="ask-p">D. He helps students prepare their resumes.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">49. What should students interested in the tutorials do? </p>
+        <p class="ask-p">A. Contact the elementary school.</p>
+        <p class="ask-p">B. Sign up for a special class.</p>
+        <p class="ask-p">C. Submit a resume to the dean.</p>
+        <p class="ask-p" data-true="1">D. Talk to Professor Dodge.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">50. Whom do you think the speaker addresses to? </p>
+        <p class="ask-p">A. Faculty</p>
+        <p class="ask-p" data-true="1">B. Students</p>
+        <p class="ask-p">C. Freshman</p>
+        <p class="ask-p">D. Graduating students</p>
+        </div>
+
+        <p class="miaoshu">12）.How men first learnt to invent words is unknown; in other words, the origin of language is a mystery. All we really know is that men, unlike animals, somehow invented certain sounds to express thought and feelings, actions and things, so that they could communicate with each other; and that later they agreed upon certain signs, called letters, which could be combined to present those sounds, and which could be written down. Those sounds, whether spoken or written in letters, we call words. The power of words, then, lies in their associations—the things they bring up before our minds. Words become filled with meaning for us by experience; and the longer we live, the more certain words recall to us the glad and sad events of our past; and the more we read and learn, the more the number of words that mean something increases. Great writers are those who not only have great thoughts but also express these thoughts in words which appeal powerfully to our minds and emotions. This charming and telling use of words is what we call literary style. Above all, the real poet is a master of words. He can convey his meaning in words which sing like music and which by their position and association can move men to tears. We should therefore learn to choose our words carefully and use them accurately, or they will make our speech silly and vulgar.</p>
+
+
+        <div class="four-div-cont"><p class="title">56. The origin of language is</p>
+        <p class="ask-p">A. a legend handed down from the past</p>
+        <p class="ask-p">B. a matter that is hidden or secret</p>
+        <p class="ask-p">C. a question difficult to answer</p>
+        <p class="ask-p" data-true="1">D. a problem not yet solved</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">57. What is true about words? </p>
+        <p class="ask-p">A. They are used to express feelings only.</p>
+        <p class="ask-p">B. They can not be written down.</p>
+        <p class="ask-p" data-true="1">C. They are simply sounds.</p>
+        <p class="ask-p">D. They are mysterious.</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">58. The real power of words consists in their </p>
+        <p class="ask-p">A. properties</p>
+        <p class="ask-p">B. characteristics</p>
+        <p class="ask-p">C. peculiarity</p>
+        <p class="ask-p" data-true="1">D. representative function</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">59. By "association" in the last paragraph, the author means </p>
+        <p class="ask-p">A. a special quality</p>
+        <p class="ask-p" data-true="1">B. a joining of ideas in the mind</p>
+        <p class="ask-p">C. an appearance which is puzzling</p>
+        <p class="ask-p">D. a strange feature</p>
+        </div>
+
+        <div class="four-div-cont"><p class="title">60. Which of the following statements about the real poet is NOT true? </p>
+        <p class="ask-p" data-true="1">A. He is no more than a master of words.</p>
+        <p class="ask-p">B. He can convey his ideas in words which sing like music.</p>
+        <p class="ask-p">C. He can move men to tears.</p>
+        <p class="ask-p">D. His style is always charming.</p>
+        </div>
+    </li>
+    <li  class="selected-li" data-ask="BCADE" data-arr="appeared,cities,family,means,ride">
+        <p class="miaoshu">
+            1）.In the eighteenth century, cities became larger and larger. People moved from the countryside and small towns to the 61 because there was more work for them to do in the cities. On Sundays and holidays, they liked to leave the cities and have a good time in the countryside. But not every 62 had a horse or a wagon（四轮马车）. People needed a simpler means of transportation. Inventors in many countries tried to solve this problem. The first bicycle, which was very simple, 63 in 1790. People called "the horse on wheel". Then in 1861, after many improvements being made, the bicycle became a practical 64 of transportation. People liked bikes because they weren't as expensive as horses and didn't need to be fed. They could go anywhere and were easy to 65 .
+        </p>
+    </li>
+    <li  class="selected-li" data-ask="DABEC" data-arr="of,under,accept,from,on">
+        <p class="miaoshu">
+            2）.Many people would agree that stress is a major problem in modern life. It is certainly true that worry and quarrel can cause all kinds of illnesses, 66 backache to severe headaches, or even more serious complaints such as high blood pressure. Many of us think 67 stress as something that other people impose on us. We often complain about how other people put us 68 pressure. But we should try not to let such pressure affect us. We should not forget that we are largely responsible for some of the stress ourselves. We sometimes take 69 more work than our bodies and our minds can handle. We should learn to 70 our limitations. We should be aware of which things are really important and which are not. 
+        </p>
+    </li>
+    <li  class="selected-li" data-ask="ADBCE" data-arr="however,interested,up,used,different">
+        <p class="miaoshu">
+            3）.There is an old saying that husbands and wives start to look and behave like each other after a time. I don't know if this was true of my mother and father. Both of my parents had brown hair and brown eyes and low voices. My father, __71__, was eight years older than my mother and taller and thinner. He was built as straight as an arrow. My mother was shorter and had a rounder and fuller face and she looked as soft as a pillow. My mother was quieter and talked less than my father did. She was also a much more patient person than my father. My father was more experienced in life. He was __72__ to doing everything quickly. My mother, on the other hand, worked and spoke more slowly. They were fond of nature and sports, such as walking, gardening and swimming. They were both __73__ in reading and music, but my father preferred history books, while my mother liked to read romantic novels. In music, their types were similar, and they were never proud of listening to it. Most of the time they were in agreement on bringing __74__ their children. They both believed in giving them love and neither one believed in punishing them physically. At times, their personalities were very much alike, but at other times, they seemed very __75__. Perhaps that is why none of their children knows which parent he looks or behaves like.
+        </p>
+    </li>
+    <li  class="selected-li" data-ask="EABDC" data-arr="ourselves,is found,be,in,no">
+        <p class="miaoshu">
+            4）.Water is very important to living things. Without water there can be ___76___ life on earth. All animals and plants need water. Man need water, too. We need water to drink, to cook our food and to clean ___77___. Water ___78___ almost everywhere. Even in the driest part of the would there is some water in the air. You can not see it or feel it when it is part of the air. The water ___79___ seas and rivers is a liquid. The water in the air is not a liquid but a gas. Clouds are made of water. They may ___80__ made of very small drops of water. Water, you have found, is very useful, so we must save water. 
+        </p>
+    </li>
+    <li  class="selected-li" data-ask="DBECA" data-arr="uncomfortable,would make,to remember,what,vary">
+        <p class="miaoshu">
+            5）.Social customs and ways of behaving are changing. __81__ was considered impolite many years ago is now acceptable. Just a few years ago, it was thought to be impolite behavior for a man to smoke in the street. No man who thought of himself as being a gentleman __82__ a fool of himself by smoking when a woman was in the room. Customs __83__ from country to country, but the important thing __84__ is not to do anything that might make other people feel __85__, especially if they are your guests. You are expected to find a way to keep them from feeling foolish.
+        </p>
+    </li>
+    <li  class="selected-li" data-ask="BEADC" data-arr="and,treating,from,new,use">
+        <p class="miaoshu">
+            6）.One of the latest imports is acupuncture(针刺疗法), the use of needles for __86__ disease. Although acupuncture has been practiced in China for 2000 years, its __87__ in the Western world is still very __88__. Several hospitals in the United States are now experimenting with acupuncture as a way of treating pains. An American journalist described the process __89__ its effects. To keep the patient __90__ feeling pain during the operation, four needles were used, each about an inch and a half long. The tops of the needles were attached to wires which led to a small electrical device.
+        </p>
+    </li>
+    <li  class="selected-li" data-ask="BADCE" data-arr="a different,one hour,cross,changes,begins">
+        <p class="miaoshu">
+            7）.Strange things happen to time when you travel, because the earth is divided into twenty-four parts, ___91___ a part. You can have days with more or fewer than twenty-four hours, and weeks with more or fewer than seven days. Your ship goes into ___92___ time part every day if you make a five-day journey across the Atlantic Ocean. As you go into each part, the time ___93___ one hour. Traveling west, you set your clock back; traveling east, you let it ahead. Each day of your journey has either twenty-five or twenty-three hours. If you travel by ship across the Pacific, you ___94___ the International Date Line. This is the point where a new day ___95___. When you go across the line, you change your calendar one full day, back or ahead.
+        </p>
+    </li>
+    <li  class="selected-li" data-ask="CABED" data-arr="of,Although,where,over,freedom">
+        <p class="miaoshu">
+            8）.Modern zoos are very different from zoos that were built fifty years ago. At that time, zoos were places 96 people could go to see animals from many parts of the world. The animals lived in cages that were made 97 concrete with iron bars, cages that were easy to keep clean. Unfortunately for the animals, the cages were small and impossible to hide in. The zoo environment was anything but natural. 98 the zoo keepers took good care of the animals and fed them well, many of the animals did not thrive; they behaved in strange ways, and they often became ill. In modern zoos, people can see animals in more natural habitats. The animals are given more 99 in large areas so that they can live more comfortably as they would in nature. Even the appearance of zoos has changed. Trees and grass grow in the cages, and streams of water flow 100 the areas that animals live in.
+        </p>
+    </li>
+</ul>
+</body>
+</html>

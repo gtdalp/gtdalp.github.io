@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html lang="en-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="Keywords" content="尜尜爱摄影 尜尜 摄影 风景摄影 微距摄影 前端 html5 css3 前端设计" />
+<meta name="Description" content="尜尜爱摄影" />
+<title>摄影部落</title>
+<link rel="stylesheet" href="css/comm.css" />
+<link rel="stylesheet" href="css/list1.css" />
+<link rel="stylesheet" href="css/touchTouch.css" />
+<script src="js/jquery-1.8.0.min.js"></script>
+<script src="js/comm.js"></script>
+<script src="js/list.js"></script>
+<script type="text/javascript" src="js/touchTouch.jquery.js"></script>
+<script type="text/javascript">if($(window).width()>1024){document.write("<"+"script src='js/jquery.preloader.js'></"+"script>");}	</script>
+<style>
+.sec_cont{background:none;font-family:"微软雅黑";margin-top:0;}
+.title_h3{font-size:40px;padding-bottom:10px;color:#fff;text-shadow:0 0 3px #f60;}
+.bgw_sec{padding-top:110px;background:url(images/bg-content.jpg) repeat;}
+.syzm_ul li{background:none;height:auto;margin:0 2.564102564102564% 2.564102564102564% 0;}
+#filters{padding:10px 0;}
+#filters span{display:inline-block;padding:7px 10px;margin:0 5px 7px 0;font-size:20px;background:rgba(255,255,255,0.5);transition: all 0.5s linear 0s;cursor:pointer;color:#fff}
+#filters span:hover{background:rgba(255,255,255,0.8);text-shadow:0 0 1px  #000;}
+.syzm_art{margin-top:20px;}
+.syzm_art ul li{transition: all 0.5s linear 0s;}
+.syzm_art ul li .title_span{transition: all 0.5s linear 0s;padding:7px 3px;background:rgba(255,255,255,0.9);font-size:16px;display:block;line-height:20px;position:relative;z-index:10;}
+.syzm_art ul li .title_span strong{display:block;padding-top:5px;}
+.syzm_art ul li .rel{width:100%;height:100%;}
+.syzm_art ul li .rel div{transition: all 0.5s linear 0s;width:100%;height:100%;position:absolute;background:rgba(0,0,0,0.1);z-index:9;display:none;}
+.syzm_art ul li .rel div a{transition: all 0.5s linear 0s;position:absolute;height:35px;width:35px;top:0;}
+.syzm_art ul li:hover .rel div{display:block;}
+.syzm_art ul li .rel div .fangda{background:url(images/icoa.png) no-repeat 8px 8px rgba(0,0,0,0.7);left:0;}
+.syzm_art ul li .rel div .alink{background:url(images/icoa.png) no-repeat 5px -54px rgba(0,0,0,0.7);right:0;}
+.syzm_art ul li .rel div:hover{background:rgba(0,0,0,0.5);border-radius:8px;}
+.syzm_art ul li:hover img{border-radius:8px 8px 0 0;}
+.syzm_art ul li:hover .title_span{border-radius:0 0 8px 8px;}
+.syzm_art ul li:hover{box-shadow:0 0 7px #fff;border-radius:8px;}
+.syzm_art ul li .rel div:hover .fangda{background:url(images/icoa.png) no-repeat 8px 8px rgba(0,0,0,0.7);left:50%;top:50%;margin:-36px 0 0 -36px;}
+.syzm_art ul li .rel div:hover .alink{background:url(images/icoa.png) no-repeat 5px -54px rgba(0,0,0,0.7);right:50%;top:50%;margin:-36px -36px 0 0;}
+#footer{margin-top:30px;}
+
+@media screen and (min-width:1200px){
+	.syzm_ul li:nth-child(4n){margin-right:0;}
+}
+@media screen and (min-width:991px) and (max-width:1199px){
+	.syzm_ul li:nth-child(4n){margin-right:0;}
+}
+@media screen and (min-width:776px) and (max-width:990px){
+	.syzm_ul li{background:none;height:auto;margin:0 2.564102564102564% 2.564102564102564% 0;width:31.623931623931625%;}
+	.syzm_ul li:nth-child(3n){margin-right:0;}
+}
+@media screen and (max-width:775px){
+	.syzm_ul li{background:none;height:auto;margin:0 0 2.564102564102564% 0;width:100%;}
+}
+@media screen and (max-width:480px){
+	.syzm_ul li{background:none;height:auto;margin:0 0 2.564102564102564% 0;width:100%;}
+}
+</style>
+<script src="js/isotope.pkgd.js"></script>
+</head>
+<body>
+<header id="header">
+	<div class="navbar">
+		<div class="logo l"><span id="zs_nav"><em></em><em></em><em></em></span><a href="#"><img src="images/pic/logo.gif" /><img src="images/pic/logo.gif" /></a></div>
+		<nav id="nav">
+			<a href="#">
+				<div class="img"><img src="images/00.png"></div>
+				<div class="txt">HOME</div>
+			</a><a href="#">
+				<div class="img"><img src="images/02.png"></div>
+				<div class="txt">WEB前端</div>
+			</a><a href="#" class="active">
+				<div class="img"><img src="images/04.png"></div>
+				<div class="txt">摄影部落</div>
+			</a><a href="#">
+				<div class="img"><img src="images/03.png"></div>
+				<div class="txt">风光无限</div>
+			</a><a href="#">
+				<div class="img"><img src="images/01.png"></div>
+				<div class="txt">ABOUT</div>
+			</a>
+		</nav>
+	</div>
+</header>
+<section class="bgw_sec">
+	<section class="sec_cont mc">
+		<h3 class="title_h3">摄影部落</h3>
+		<div id="filters">
+			<span data-filter="dashiyz">大师影展</span>
+			<span data-filter="earth">地球之美</span>
+			<span data-filter="city">城市印象</span>
+			<span data-filter="youth">青春写真</span>
+			<span data-filter="documentary">纪实</span>
+			<span data-filter="travel">旅行</span>
+			<span data-filter="media_cooperation">我们在一起</span>
+			<span data-filter="all">全部</span>
+		</div>
+		<article class="syzm_art">
+			<ul class="syzm_ul" id="container"></ul>
+		</article>
+		<div class="cl"></div>
+	</section>
+	<footer id="footer">
+		<section class="fot_sec2"><p>© 2013 GAGA</p><span id="ico_top">top</span></section>
+	</footer>
+</section>
+<script>
+$(function(){
+	$("#container").load("shuju/all.html",function(){
+		jQuery('.magnifier').touchTouch();
+	});
+	$("#filters span").click(function(){
+		var data = $(this).attr("data-filter");
+		$("#gallerySlider").html("");
+		$("#prevArrow,#nextArrow").remove();
+		$("#container").load("shuju/"+data+".html",function(){
+			jQuery('.magnifier').touchTouch();
+		});
+	});
+})
+</script>
+</body>
+</html>

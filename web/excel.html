@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="user-scalable=no, width=device-width, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="format-detection" content="telephone=no" />
+<title>excel</title>
+<link rel="stylesheet" type="text/css" href="css/comm.css">
+<link rel="stylesheet" type="text/css" href="style.css">
+<script src="js/jquery-1.8.0.min.js"></script>
+<script src="timu.js"></script>
+</style>
+<script>
+function readThis(){   
+    var tempStr = "";   
+    var filePath= document.all.upfile.value;   
+    var oXL = new ActiveXObject("Excel.application");   
+    var oWB = oXL.Workbooks.open(filePath);   
+    oWB.worksheets(1).select();  
+    var len = 70;       // 要取到的多少条数据  
+    var oSheet = oWB.ActiveSheet;   
+    try{   
+
+        // 英语1
+        for(var i=1;i<= len;i++){  
+            var val = oSheet.Cells(i,1).value;
+            if (i%2 == 0) {
+                tempStr += '<li><p class="title">' + val + '</p>';
+            }else {
+                tempStr += '<p class="text"><span data-true="1" class="active">' + val + '</span></p></li>';
+            } 
+        } 
+
+        // 英语2
+        // for(var i=1;i<= len;i++){  
+        //     var val = oSheet.Cells(i,1).value;
+        //     if ((i%6-1) == 0 || i == 1) {
+        //         tempStr += '],<br/>[<br/>"' + val + '",<br/>';
+        //     }else {
+        //         tempStr += '"' + val + '",<br/>';
+        //     } 
+        // } 
+    }catch(e){   
+        document.all.txtArea.innerHTML = tempStr;   
+    }   
+    console.log(tempStr)
+    document.all.txtArea.innerHTML = tempStr;   
+    oXL.Quit();   
+    CollectGarbage();   
+}   
+</script>
+</head>
+<body>
+<input type="file" id="upfile" /><input type="button" onclick="readThis();" value="读取">   
+<div id="txtArea" style="width:500px;height:500px;overflow:auto"></div>  
+</body>
+</html>

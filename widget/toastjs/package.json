@@ -1,0 +1,20 @@
+{
+  "name": "toastjs",
+  "version": "0.0.2",
+  "description": "弹出提示",
+  "main": "build/toast.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "xisa",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gtdalp/toastjs.git"
+  },
+  "keywords": [
+    "popup",
+    "alert",
+    "toast"
+  ]
+}

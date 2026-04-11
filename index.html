@@ -1,43 +1,682 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<title>demo</title>
-<link rel="stylesheet" type="text/css" href="css/base.css" />
-<style type="text/css">
-html,body{
-    overflow-y:auto;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<title>下班倒计时</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#141210;
+  --text:#f5efe6;
+  --muted:#6e6560;
+  --accent:#e0922e;
+  --accent-end:#cc5f3a;
+  --surface:rgba(255,255,255,.06);
+  --border:rgba(255,255,255,.1);
+  --surface-strong:rgba(255,255,255,.035);
+  --ring-track:rgba(255,255,255,.045);
+  --ring-glow:rgba(224,146,46,.16)
 }
-.widget-ul{
-    padding-bottom:20px;
+
+html,body{height:100%}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow-x:hidden
 }
-.widget-ul>li{
-    margin-top:10px;
+
+.container{
+  text-align:center;
+  width:100%;
+  max-width:800px;
+  padding:2rem 2rem 3rem
 }
-.widget-ul>li>a{
-    display:block;
-    height:40px;
-    line-height:40px;
-    padding:0 15px;
-    border-top:1px solid #ccc;
-    border-bottom:1px solid #ccc;
-    background:#fff;
-    font-size:14px;
-    color:#333;
+
+/* date */
+.date{
+  font-size:1.3rem;
+  color:var(--muted);
+  font-weight:300;
+  letter-spacing:.06em;
+  margin-bottom:2rem
+}
+
+/* flip clock */
+.flip-clock{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.55rem;
+  margin-bottom:2.5rem
+}
+
+.flip-clock .sep-colon{
+  font-size:3rem;
+  font-weight:700;
+  color:rgba(245,239,230,.96);
+  padding:0 .1rem;
+  line-height:88px;
+  text-shadow:0 0 12px rgba(255,255,255,.04)
+}
+
+.flip-card{
+  position:relative;
+  width:66px;
+  height:88px;
+  border-radius:16px;
+  overflow:hidden;
+  perspective:1200px;
+  background:linear-gradient(180deg,#2a2724 0%,#1a1715 100%);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 16px 32px rgba(0,0,0,.28)
+}
+
+.flip-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0) 22%,rgba(0,0,0,.14) 100%);
+  pointer-events:none;
+  z-index:8
+}
+
+.flip-card::after{
+  content:'';
+  position:absolute;
+  left:0;
+  right:0;
+  top:50%;
+  height:2px;
+  transform:translateY(-1px);
+  background:linear-gradient(90deg,rgba(255,255,255,.03),rgba(0,0,0,.75) 14%,rgba(0,0,0,.75) 86%,rgba(255,255,255,.03));
+  box-shadow:0 1px 0 rgba(255,255,255,.05);
+  z-index:9
+}
+
+.flip-base,
+.flip-panel{
+  position:absolute;
+  inset:0;
+}
+
+.flip-base{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:5.1rem;
+  font-weight:650;
+  line-height:1;
+  color:rgba(245,239,230,.98);
+  text-shadow:0 1px 0 rgba(255,255,255,.04);
+  z-index:1
+}
+
+.flip-panel{
+  height:50%;
+  overflow:hidden;
+  background:#1d1a18;
+}
+
+.flip-static.top,
+.flip-flap.top{top:0;z-index:3}
+.flip-static.bottom,
+.flip-flap.bottom{top:50%;z-index:2;background:linear-gradient(180deg,#181513 0%,#211d1a 100%)}
+
+.flip-panel .digit{
+  position:absolute;
+  left:0;
+  width:100%;
+  height:88px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:5.1rem;
+  font-weight:650;
+  line-height:1;
+  color:rgba(245,239,230,.98);
+  text-shadow:0 1px 0 rgba(255,255,255,.04)
+}
+
+.flip-static.top .digit,
+.flip-flap.top .digit{top:0}
+.flip-static.bottom .digit,
+.flip-flap.bottom .digit{top:-44px}
+
+.flip-flap{
+  opacity:0;
+  backface-visibility:hidden;
+  transform-style:preserve-3d;
+  z-index:6
+}
+
+.flip-flap.top{
+  transform-origin:bottom center;
+  background:linear-gradient(180deg,#2d2926 0%,#1d1a18 100%)
+}
+
+.flip-flap.bottom{
+  transform-origin:top center;
+  background:linear-gradient(180deg,#171412 0%,#24201d 100%);
+  transform:rotateX(90deg)
+}
+
+.flip-card.flipping .flip-flap{opacity:1}
+.flip-card.flipping .flip-flap.top{animation:flipTop .56s cubic-bezier(.22,.61,.36,1) forwards}
+.flip-card.flipping .flip-flap.bottom{animation:flipBottom .56s cubic-bezier(.22,.61,.36,1) forwards}
+
+@keyframes flipTop{
+  0%{transform:rotateX(0deg);filter:brightness(1)}
+  49%{transform:rotateX(-89deg);filter:brightness(.72)}
+  50%,100%{opacity:0;transform:rotateX(-90deg);filter:brightness(.72)}
+}
+
+@keyframes flipBottom{
+  0%,49%{opacity:0;transform:rotateX(90deg);filter:brightness(.7)}
+  50%{opacity:1;transform:rotateX(90deg);filter:brightness(.7)}
+  100%{opacity:1;transform:rotateX(0deg);filter:brightness(1)}
+}
+/* ring */
+.ring-wrap{
+  position:relative;
+  width:360px;
+  height:360px;
+  margin:0 auto 2.5rem;
+  isolation:isolate
+}
+
+.ring-wrap::before{
+  content:'';
+  position:absolute;
+  inset:34px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(224,146,46,.07), rgba(224,146,46,0) 62%);
+  filter:blur(10px);
+  z-index:0;
+  pointer-events:none
+}
+
+.ring-svg{
+  width:100%;
+  height:100%;
+  transform:rotate(-90deg)
+}
+
+.ring-track{
+  fill:none;
+  stroke:var(--ring-track);
+  stroke-width:2
+}
+
+.ring-progress{
+  fill:none;
+  stroke:url(#rg);
+  stroke-width:4;
+  stroke-linecap:round;
+  transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1);
+  filter:drop-shadow(0 0 12px var(--ring-glow))
+}
+
+.ring-inner{
+  position:absolute;
+  z-index:1;
+  inset:30px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:.85rem;
+  padding:2.2rem 1.8rem;
+  border-radius:50%;
+  background:radial-gradient(circle at 50% 38%, rgba(255,255,255,.045), rgba(255,255,255,.015) 52%, rgba(0,0,0,0) 72%);
+  text-align:center
+}
+
+.countdown-chip{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:34px;
+  padding:0 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  background:var(--surface-strong);
+  color:var(--muted);
+  font-size:.9rem;
+  letter-spacing:.12em;
+  text-transform:uppercase
+}
+
+.countdown{
+  font-size:4.3rem;
+  font-weight:650;
+  letter-spacing:-.05em;
+  line-height:1
+}
+
+.colon-blink{animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:.3}}
+
+.ring-label{
+  font-size:1.15rem;
+  color:var(--muted);
+  font-weight:400;
+  letter-spacing:.02em
+}
+
+.worked-time{
+  font-size:1rem;
+  color:rgba(245,239,230,.68);
+  font-weight:400
+}
+
+/* input */
+.input-row{
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:3rem;
+  margin-bottom:2rem
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.75rem
+}
+
+.field-label{
+  font-size:1.1rem;
+  color:var(--muted);
+  font-weight:300
+}
+
+.time-wrapper{
+  position:relative;
+  display:inline-flex;
+  align-items:center
+}
+
+.time-wrapper svg{
+  position:absolute;
+  right:16px;
+  width:32px;
+  height:32px;
+  stroke:var(--muted);
+  fill:none;
+  stroke-width:2;
+  stroke-linecap:round;
+  pointer-events:none
+}
+
+.time-input{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:3rem;
+  font-weight:600;
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:.7rem 3.5rem .7rem 1.5rem;
+  border-radius:18px;
+  text-align:center;
+  width:240px;
+  outline:none;
+  -webkit-appearance:none;
+  transition:border-color .25s,box-shadow .25s
+}
+
+.time-input::-webkit-calendar-picker-indicator{
+  opacity:0;
+  position:absolute;
+  top:0;left:0;right:0;bottom:0;
+  width:100%;
+  height:100%;
+  cursor:pointer
+}
+
+.time-input:focus{
+  border-color:rgba(224,146,46,.4);
+  box-shadow:0 0 0 4px rgba(224,146,46,.08)
+}
+
+.result{
+  font-size:3rem;
+  font-weight:600;
+  color:var(--accent);
+  padding:.7rem 0
+}
+
+.sep{
+  width:24px;
+  height:1px;
+  background:var(--border);
+  margin-bottom:.8rem
+}
+
+/* status */
+.status{
+  font-size:1.3rem;
+  color:var(--accent);
+  font-weight:400;
+  min-height:1.4em
+}
+
+/* weekend */
+.weekend .countdown-chip{
+  border-color:rgba(224,146,46,.14);
+  color:rgba(224,146,46,.78);
+  background:rgba(224,146,46,.06)
+}
+
+/* entrance */
+@keyframes up{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.date{animation:up .6s ease-out both}
+.flip-clock{animation:up .6s .1s ease-out both}
+.ring-wrap{animation:up .6s .15s ease-out both}
+.input-row{animation:up .6s .25s ease-out both}
+.status{animation:up .6s .35s ease-out both}
+
+@media(max-width:540px){
+  .ring-wrap{width:280px;height:280px}
+  .ring-inner{inset:24px;padding:1.8rem 1.2rem;gap:.7rem}
+  .countdown-chip{font-size:.78rem;padding:0 12px;min-height:30px}
+  .countdown{font-size:3.2rem}
+  .ring-label{font-size:1rem}
+  .worked-time{font-size:.9rem}
+  .weekend .countdown{font-size:2.35rem}
+  .time-input{width:200px;font-size:2.2rem;padding:.5rem 3rem .5rem 1rem}
+  .time-wrapper svg{right:12px;width:26px;height:26px}
+  .input-row{gap:2rem}
+  .flip-card{width:50px;height:68px;border-radius:12px}
+  .flip-clock .sep-colon{font-size:2.35rem;line-height:68px}
+  .flip-base,.flip-panel .digit{font-size:4rem}
+  .flip-panel .digit{height:68px}
+  .flip-static.bottom .digit,.flip-flap.bottom .digit{top:-34px}
 }
 </style>
 </head>
 <body>
-<ul class="widget-ul">
-    <li><a href="widget/listloading/demos/listloading.html">listloading 移动端上拉下拉刷新</a></li>
-    <li><a href="widget/toastjs/demos/toastjs.html">toastjs 弹出提示</a></li>
-    <li><a href="widget/pushbutton/demos/pushbutton.html">pushbutton 移动端弹出列表选择框</a></li>
-    <li><a href="widget/animatejs/demos/animatejs.html">animatejs css3动画组件</a></li>
-    <li><a href="widget/css3clock/css3-clock.html">css3 数字时钟</a></li>
-    <li><a href="widget/photoswipe/index.html">移动端图片放大效果</a></li>
-</ul>
+
+<div class="container">
+  <div class="date" id="date"></div>
+
+  <div class="flip-clock" id="flipClock"></div>
+
+  <div class="ring-wrap">
+    <svg class="ring-svg" viewBox="0 0 360 360">
+      <defs>
+        <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#e0922e"/>
+          <stop offset="100%" stop-color="#cc5f3a"/>
+        </linearGradient>
+      </defs>
+      <circle class="ring-track" cx="180" cy="180" r="170"/>
+      <circle class="ring-progress" id="ring" cx="180" cy="180" r="170"/>
+    </svg>
+    <div class="ring-inner">
+      <div class="countdown-chip" id="countdownChip">预计下班剩余</div>
+      <div class="countdown" id="countdown"></div>
+      <div class="ring-label" id="ringLabel"></div>
+      <div class="worked-time" id="workedTime"></div>
+    </div>
+  </div>
+
+  <div class="input-row">
+    <div class="field">
+      <span class="field-label">上班打卡</span>
+      <div class="time-wrapper">
+        <input type="time" class="time-input" id="clockIn" value="08:30">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+    </div>
+    <div class="sep"></div>
+    <div class="field">
+      <span class="field-label">预计下班</span>
+      <div class="result" id="clockOut">17:45</div>
+    </div>
+  </div>
+
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+// --- Flip Clock ---
+const flipClockEl = document.getElementById('flipClock');
+
+function makeCard(val) {
+  const card = document.createElement('div');
+  card.className = 'flip-card';
+  card.dataset.val = val;
+  card.innerHTML = `
+    <div class="flip-base">${val}</div>
+    <div class="flip-panel flip-static top"><div class="digit">${val}</div></div>
+    <div class="flip-panel flip-static bottom"><div class="digit">${val}</div></div>
+    <div class="flip-panel flip-flap top"><div class="digit">${val}</div></div>
+    <div class="flip-panel flip-flap bottom"><div class="digit">${val}</div></div>
+  `;
+  return card;
+}
+
+const cards = [];
+for (let i = 0; i < 6; i++) {
+  const card = makeCard('0');
+  flipClockEl.appendChild(card);
+  cards.push(card);
+  if (i === 1 || i === 3) {
+    const sep = document.createElement('span');
+    sep.className = 'sep-colon';
+    sep.textContent = ':';
+    flipClockEl.appendChild(sep);
+  }
+}
+
+let prevDigits = [];
+
+function setPanelDigit(card, selector, value) {
+  card.querySelector(selector).textContent = value;
+}
+
+function setStaticDigit(card, value) {
+  setPanelDigit(card, '.flip-base', value);
+  setPanelDigit(card, '.flip-static.top .digit', value);
+  setPanelDigit(card, '.flip-static.bottom .digit', value);
+}
+
+function flipTo(card, newVal) {
+  const oldVal = card.dataset.val;
+  if (oldVal === newVal) return;
+
+  setPanelDigit(card, '.flip-flap.top .digit', oldVal);
+  setPanelDigit(card, '.flip-flap.bottom .digit', newVal);
+
+  card.classList.remove('flipping');
+  void card.offsetWidth;
+  card.classList.add('flipping');
+  card.dataset.val = newVal;
+
+  setTimeout(() => {
+    setStaticDigit(card, newVal);
+  }, 280);
+
+  setTimeout(() => {
+    card.classList.remove('flipping');
+  }, 560);
+}
+
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2, '0');
+  const m = String(now.getMinutes()).padStart(2, '0');
+  const s = String(now.getSeconds()).padStart(2, '0');
+  const digits = [h[0], h[1], m[0], m[1], s[0], s[1]];
+
+  if (prevDigits.length === 0) {
+    cards.forEach((card, idx) => {
+      card.dataset.val = digits[idx];
+      setStaticDigit(card, digits[idx]);
+    });
+    prevDigits = [...digits];
+    return;
+  }
+
+  for (let i = 0; i < 6; i++) {
+    if (digits[i] !== prevDigits[i]) flipTo(cards[i], digits[i]);
+  }
+  prevDigits = [...digits];
+}
+
+// --- Main Logic ---
+const el = id => document.getElementById(id);
+const clockInEl   = el('clockIn');
+const countdownEl = el('countdown');
+const countdownChipEl = el('countdownChip');
+const ringLabelEl = el('ringLabel');
+const workedTimeEl = el('workedTime');
+const clockOutEl  = el('clockOut');
+const ringEl      = el('ring');
+const dateEl      = el('date');
+const statusEl    = el('status');
+
+const R = 170;
+const C = 2 * Math.PI * R;
+ringEl.style.strokeDasharray  = C;
+ringEl.style.strokeDashoffset = C;
+
+const LUNCH_S = 11 * 3600 + 45 * 60;
+const LUNCH_E = 13 * 3600;
+const WORK    = 8 * 3600;
+
+const pad = n => String(n).padStart(2, '0');
+const CLOCK_IN_KEY = 'camclaw_clock_in';
+
+const savedClockIn = localStorage.getItem(CLOCK_IN_KEY);
+if (savedClockIn && /^\d{2}:\d{2}$/.test(savedClockIn)) {
+  clockInEl.value = savedClockIn;
+}
+
+function fmtTime(min) {
+  return pad(Math.floor(min / 60)) + ':' + pad(min % 60);
+}
+
+function fmtCountdown(sec) {
+  sec = Math.max(0, sec);
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  return pad(h) + '<span class="colon-blink">:</span>' + pad(m) + '<span class="colon-blink">:</span>' + pad(s);
+}
+
+function fmtWorked(sec) {
+  sec = Math.max(0, sec);
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  if (h <= 0) return `已工作 ${m} 分钟`;
+  if (m <= 0) return `已工作 ${h} 小时`;
+  return `已工作 ${h} 小时 ${m} 分`;
+}
+
+function getEndMin(sh, sm) {
+  const start  = sh * 60 + sm;
+  const lunchS = 11 * 60 + 45;
+  const lunchE = 13 * 60;
+  if (start < lunchS) {
+    const morning = lunchS - start;
+    if (morning >= 480) return start + 480;
+    return lunchE + (480 - morning);
+  }
+  if (start < lunchE) return lunchE + 480;
+  return start + 480;
+}
+
+function workedSec(nowS, startS) {
+  if (nowS <= startS) return 0;
+  if (startS < LUNCH_S) {
+    if (nowS <= LUNCH_S) return nowS - startS;
+    if (nowS <= LUNCH_E) return LUNCH_S - startS;
+    return (LUNCH_S - startS) + (nowS - LUNCH_E);
+  }
+  if (startS < LUNCH_E) {
+    return nowS <= LUNCH_E ? 0 : nowS - LUNCH_E;
+  }
+  return nowS - startS;
+}
+
+function tick() {
+  const now = new Date();
+  const nowS = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+  const val  = clockInEl.value;
+  if (!val) return;
+  const [sh, sm] = val.split(':').map(Number);
+  const startS = sh * 3600 + sm * 60;
+
+  const endMin = getEndMin(sh, sm);
+  const endS   = endMin * 60;
+  const endStr = fmtTime(endMin);
+  clockOutEl.textContent = endStr;
+
+  const day = now.getDay();
+  const isWeekend = day === 0 || day === 6;
+  document.body.classList.toggle('weekend', isWeekend);
+
+  const w    = workedSec(nowS, startS);
+  const pct  = Math.min(1, w / WORK);
+  ringEl.style.strokeDashoffset = C * (1 - pct);
+
+  const remain = endS - nowS;
+  if (nowS < startS) {
+    countdownChipEl.textContent = isWeekend ? '周末 · 距离上班' : '距离上班';
+    countdownEl.innerHTML = fmtCountdown(startS - nowS);
+    ringLabelEl.textContent = `预计 ${endStr} 下班`;
+    workedTimeEl.textContent = isWeekend ? '周末也按工作时长规则预估' : '今天还没有开始计时';
+    statusEl.textContent = isWeekend ? '当前是周末，仍按工作日规则显示' : '还没到上班时间';
+  } else if (remain > 0) {
+    countdownChipEl.textContent = isWeekend ? '周末 · 预计下班剩余' : '预计下班剩余';
+    countdownEl.innerHTML = fmtCountdown(remain);
+    ringLabelEl.textContent = `预计 ${endStr} 下班`;
+    workedTimeEl.textContent = fmtWorked(w);
+    if (nowS >= LUNCH_S && nowS < LUNCH_E) {
+      statusEl.textContent = isWeekend ? '周末午休中，按规则继续计时展示' : '午休中，好好休息';
+    } else if (remain <= 1800) {
+      statusEl.textContent = '马上就下班了，再坚持一下';
+    } else {
+      statusEl.textContent = isWeekend ? '当前是周末，倒计时按工作日规则演示' : '专注工作中';
+    }
+  } else {
+    countdownChipEl.textContent = isWeekend ? '周末 · 今日已完成' : '今日已完成';
+    countdownEl.innerHTML = '00<span class="colon-blink">:</span>00<span class="colon-blink">:</span>00';
+    ringLabelEl.textContent = `预计 ${endStr} 下班`;
+    workedTimeEl.textContent = fmtWorked(WORK);
+    statusEl.textContent = isWeekend ? '周末模式下的预计工时已结束' : '下班啦，辛苦了！';
+  }
+
+  const wd = ['日','一','二','三','四','五','六'];
+  dateEl.textContent = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日  星期' + wd[day];
+}
+
+clockInEl.addEventListener('input', () => {
+  localStorage.setItem(CLOCK_IN_KEY, clockInEl.value);
+  tick();
+});
+setInterval(tick, 1000);
+tick();
+updateClock();
+setInterval(updateClock, 1000);
+</script>
 </body>
 </html>

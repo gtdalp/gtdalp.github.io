@@ -306,18 +306,6 @@ body{
   align-items:center
 }
 
-.time-wrapper svg{
-  position:absolute;
-  right:16px;
-  width:32px;
-  height:32px;
-  stroke:var(--muted);
-  fill:none;
-  stroke-width:2;
-  stroke-linecap:round;
-  pointer-events:none
-}
-
 .time-input{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-size:3rem;
@@ -330,22 +318,51 @@ body{
   text-align:center;
   width:240px;
   outline:none;
-  -webkit-appearance:none;
   transition:border-color .25s,box-shadow .25s
-}
-
-.time-input::-webkit-calendar-picker-indicator{
-  opacity:0;
-  position:absolute;
-  top:0;left:0;right:0;bottom:0;
-  width:100%;
-  height:100%;
-  cursor:pointer
 }
 
 .time-input:focus{
   border-color:rgba(224,146,46,.4);
   box-shadow:0 0 0 4px rgba(224,146,46,.08)
+}
+
+.time-picker-btn{
+  position:absolute;
+  right:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:42px;
+  height:42px;
+  border:none;
+  border-radius:12px;
+  background:transparent;
+  color:var(--muted);
+  cursor:pointer;
+  transition:background .2s,color .2s
+}
+
+.time-picker-btn:hover,
+.time-picker-btn:focus-visible{
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+  outline:none
+}
+
+.time-picker-btn svg{
+  width:30px;
+  height:30px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:2;
+  stroke-linecap:round
+}
+
+.time-picker-native{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  pointer-events:none
 }
 
 .result{
@@ -370,6 +387,54 @@ body{
   min-height:1.4em
 }
 
+.extra-countdowns{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:1rem;
+  margin-top:1.5rem
+}
+
+.extra-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1.2rem;
+  padding:1rem 1.35rem 1rem 1.1rem;
+  border-radius:18px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  text-align:left
+}
+
+.extra-label{
+  flex:1;
+  min-width:0;
+  font-size:1rem;
+  color:var(--muted);
+  line-height:1.45
+}
+
+.extra-value{
+  flex:none;
+  margin-right:.1rem;
+  font-size:2.3rem;
+  font-weight:800;
+  font-variant-numeric:tabular-nums;
+  color:var(--accent);
+  letter-spacing:-.04em;
+  white-space:nowrap
+}
+
+.extra-sub{
+  margin-top:.35rem;
+  font-size:.9rem;
+  color:rgba(245,239,230,.62)
+}
+
+.extra-sub:empty{
+  display:none
+}
+
 /* weekend */
 .weekend .countdown-chip{
   border-color:rgba(224,146,46,.14);
@@ -390,6 +455,9 @@ body{
 .status{animation:up .6s .35s ease-out both}
 
 @media(max-width:540px){
+  .container{padding:1rem .9rem 1.4rem}
+  .date{font-size:1rem;margin-bottom:1rem}
+  .flip-clock{gap:.32rem;margin-bottom:1.35rem}
   .ring-wrap{width:280px;height:280px}
   .ring-inner{inset:24px;padding:1.8rem 1.2rem;gap:.7rem}
   .countdown-chip{font-size:.78rem;padding:0 12px;min-height:30px}
@@ -397,14 +465,62 @@ body{
   .ring-label{font-size:1rem}
   .worked-time{font-size:.9rem}
   .weekend .countdown{font-size:2.35rem}
-  .time-input{width:200px;font-size:2.2rem;padding:.5rem 3rem .5rem 1rem}
-  .time-wrapper svg{right:12px;width:26px;height:26px}
-  .input-row{gap:2rem}
+  .time-input{width:200px;font-size:2.2rem;padding:.5rem 3.4rem .5rem 1rem}
+  .time-picker-btn{right:8px;width:38px;height:38px}
+  .time-picker-btn svg{width:24px;height:24px}
+  .input-row{gap:1rem;align-items:stretch}
   .flip-card{width:50px;height:68px;border-radius:12px}
   .flip-clock .sep-colon{font-size:2.35rem;line-height:68px}
   .flip-base,.flip-panel .digit{font-size:4rem}
   .flip-panel .digit{height:68px}
   .flip-static.bottom .digit,.flip-flap.bottom .digit{top:-34px}
+  .extra-countdowns{grid-template-columns:1fr}
+  .extra-card{padding:.95rem 1.15rem .95rem 1rem;gap:1rem}
+  .extra-label{font-size:.95rem}
+  .extra-value{font-size:2.05rem}
+}
+
+@media(max-width:420px){
+  .container{padding:.85rem .7rem 1rem}
+  .date{font-size:.92rem;margin-bottom:.8rem}
+  .flip-clock{gap:.2rem;margin-bottom:1rem}
+  .flip-card{width:42px;height:58px;border-radius:10px}
+  .flip-clock .sep-colon{font-size:1.8rem;line-height:58px;padding:0}
+  .flip-base,.flip-panel .digit{font-size:3.2rem}
+  .flip-panel .digit{height:58px}
+  .flip-static.bottom .digit,.flip-flap.bottom .digit{top:-29px}
+  .ring-wrap{width:min(76vw,250px);height:min(76vw,250px);margin:0 auto 1.15rem}
+  .ring-inner{inset:20px;padding:1.15rem .9rem;gap:.45rem}
+  .countdown-chip{min-height:28px;font-size:.72rem;padding:0 10px;letter-spacing:.08em}
+  .countdown{font-size:2.55rem}
+  .ring-label{font-size:.92rem}
+  .worked-time{font-size:.82rem}
+  .input-row{
+    flex-direction:column;
+    align-items:stretch;
+    gap:.9rem;
+    margin-bottom:1.1rem
+  }
+  .field{gap:.45rem}
+  .field-label{font-size:.96rem}
+  .time-wrapper,.time-input{width:100%}
+  .time-input{
+    width:100%;
+    max-width:none;
+    font-size:1.85rem;
+    padding:.65rem 3rem .65rem 1rem;
+    border-radius:16px
+  }
+  .time-picker-btn{right:8px;width:36px;height:36px}
+  .time-picker-btn svg{width:22px;height:22px}
+  .result{font-size:2.25rem;padding:.2rem 0}
+  .sep{display:none}
+  .status{font-size:1.08rem;min-height:1.3em}
+  .extra-countdowns{gap:.7rem;margin-top:1rem}
+  .extra-card{padding:.8rem 1rem .8rem .9rem;border-radius:16px;gap:.85rem}
+  .extra-label{font-size:.82rem;line-height:1.35}
+  .extra-value{font-size:1.85rem}
+  .extra-sub{font-size:.8rem;line-height:1.35}
 }
 </style>
 </head>
@@ -438,11 +554,14 @@ body{
     <div class="field">
       <span class="field-label">上班打卡</span>
       <div class="time-wrapper">
-        <input type="time" class="time-input" id="clockIn" value="08:30">
-        <svg viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10"/>
-          <polyline points="12 6 12 12 16 14"/>
-        </svg>
+        <input type="text" class="time-input" id="clockIn" value="08:30" inputmode="numeric" placeholder="08:30" autocomplete="off" spellcheck="false">
+        <button type="button" class="time-picker-btn" id="clockInPickerBtn" aria-label="选择上班打卡时间">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </button>
+        <input type="time" class="time-picker-native" id="clockInPicker" value="08:30" tabindex="-1" aria-hidden="true">
       </div>
     </div>
     <div class="sep"></div>
@@ -453,6 +572,19 @@ body{
   </div>
 
   <div class="status" id="status"></div>
+
+  <div class="extra-countdowns">
+    <div class="extra-card">
+      <div class="extra-label" id="holidayLabel">距离下个节假日放假</div>
+      <div class="extra-value" id="holidayCountdown">加载中...</div>
+      <div class="extra-sub" id="holidayDetail"></div>
+    </div>
+    <div class="extra-card">
+      <div class="extra-label" id="salaryLabel">距离发工资剩余</div>
+      <div class="extra-value" id="salaryCountdown">--</div>
+      <div class="extra-sub" id="salaryDetail"></div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -544,6 +676,8 @@ function updateClock() {
 // --- Main Logic ---
 const el = id => document.getElementById(id);
 const clockInEl   = el('clockIn');
+const clockInPickerBtnEl = el('clockInPickerBtn');
+const clockInPickerEl = el('clockInPicker');
 const countdownEl = el('countdown');
 const countdownChipEl = el('countdownChip');
 const ringLabelEl = el('ringLabel');
@@ -552,6 +686,12 @@ const clockOutEl  = el('clockOut');
 const ringEl      = el('ring');
 const dateEl      = el('date');
 const statusEl    = el('status');
+const holidayLabelEl = el('holidayLabel');
+const holidayCountdownEl = el('holidayCountdown');
+const holidayDetailEl = el('holidayDetail');
+const salaryLabelEl = el('salaryLabel');
+const salaryCountdownEl = el('salaryCountdown');
+const salaryDetailEl = el('salaryDetail');
 
 const R = 170;
 const C = 2 * Math.PI * R;
@@ -564,14 +704,57 @@ const WORK    = 8 * 3600;
 
 const pad = n => String(n).padStart(2, '0');
 const CLOCK_IN_KEY = 'camclaw_clock_in';
+const HOLIDAY_CACHE_KEY = 'camclaw_holiday_cache_v1';
+const HOLIDAY_API_BASE = 'https://timor.tech/api/holiday/year';
+let holidayState = {status:'loading', holidays:[]};
 
 const savedClockIn = localStorage.getItem(CLOCK_IN_KEY);
 if (savedClockIn && /^\d{2}:\d{2}$/.test(savedClockIn)) {
   clockInEl.value = savedClockIn;
+  clockInPickerEl.value = savedClockIn;
 }
 
 function fmtTime(min) {
   return pad(Math.floor(min / 60)) + ':' + pad(min % 60);
+}
+
+function normalizeClockInInput(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return null;
+
+  const colonMatch = raw.match(/^(\d{1,2})\s*:\s*(\d{1,2})$/);
+  if (colonMatch) {
+    const h = Number(colonMatch[1]);
+    const m = Number(colonMatch[2]);
+    if (h >= 0 && h <= 23 && m >= 0 && m <= 59) return `${pad(h)}:${pad(m)}`;
+    return null;
+  }
+
+  const digits = raw.replace(/\D/g, '');
+  if (digits.length === 3) {
+    const h = Number(digits.slice(0, 1));
+    const m = Number(digits.slice(1));
+    if (h >= 0 && h <= 23 && m >= 0 && m <= 59) return `${pad(h)}:${pad(m)}`;
+    return null;
+  }
+
+  if (digits.length === 4) {
+    const h = Number(digits.slice(0, 2));
+    const m = Number(digits.slice(2));
+    if (h >= 0 && h <= 23 && m >= 0 && m <= 59) return `${pad(h)}:${pad(m)}`;
+    return null;
+  }
+
+  return null;
+}
+
+function syncClockInValue(value, {persist = true} = {}) {
+  const normalized = normalizeClockInInput(value);
+  if (!normalized) return false;
+  clockInEl.value = normalized;
+  clockInPickerEl.value = normalized;
+  if (persist) localStorage.setItem(CLOCK_IN_KEY, normalized);
+  return true;
 }
 
 function fmtCountdown(sec) {
@@ -589,6 +772,161 @@ function fmtWorked(sec) {
   if (h <= 0) return `已工作 ${m} 分钟`;
   if (m <= 0) return `已工作 ${h} 小时`;
   return `已工作 ${h} 小时 ${m} 分`;
+}
+
+function fmtDate(date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function fmtMonthDay(date) {
+  return `${date.getMonth() + 1}月${date.getDate()}日`;
+}
+
+function startOfDay(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function diffDays(target, now) {
+  return Math.ceil((startOfDay(target) - startOfDay(now)) / 86400000);
+}
+
+function setHolidayState(state) {
+  holidayState = state;
+}
+
+function getSalaryTarget(now) {
+  return new Date(now.getFullYear(), now.getMonth() + 1, 15);
+}
+
+function updateSalaryCountdown(now) {
+  const target = getSalaryTarget(now);
+  const days = diffDays(target, now);
+  const targetText = fmtMonthDay(target);
+  salaryLabelEl.textContent = `距离发工资（${targetText}）剩余`;
+  salaryCountdownEl.textContent = `${days}天`;
+  salaryDetailEl.textContent = '';
+}
+
+function updateHolidayCountdown(now) {
+  if (holidayState.status === 'loading') {
+    holidayLabelEl.textContent = '距离下个节日剩余';
+    holidayCountdownEl.textContent = '加载中...';
+    holidayDetailEl.textContent = '';
+    return;
+  }
+
+  if (holidayState.status === 'error') {
+    holidayLabelEl.textContent = '距离下个节日剩余';
+    holidayCountdownEl.textContent = '--';
+    holidayDetailEl.textContent = holidayState.message || '节假日数据获取失败';
+    return;
+  }
+
+  const today = startOfDay(now);
+  const nextHoliday = holidayState.holidays.find(item => item.start >= today);
+  if (!nextHoliday) {
+    holidayLabelEl.textContent = '距离下个节日剩余';
+    holidayCountdownEl.textContent = '--';
+    holidayDetailEl.textContent = '未找到接下来的节假日安排';
+    return;
+  }
+
+  const days = diffDays(nextHoliday.start, now);
+  holidayLabelEl.textContent = `距离${nextHoliday.name}（${fmtMonthDay(nextHoliday.start)}）剩余`;
+  holidayCountdownEl.textContent = `${days}天`;
+  holidayDetailEl.textContent = '';
+}
+
+function renderExtraCountdowns(now = new Date()) {
+  updateHolidayCountdown(now);
+  updateSalaryCountdown(now);
+}
+
+function readHolidayCache() {
+  try {
+    const raw = localStorage.getItem(HOLIDAY_CACHE_KEY);
+    if (!raw) return null;
+    const cache = JSON.parse(raw);
+    if (!Array.isArray(cache.holidays)) return null;
+    return {
+      status:'ready',
+      holidays: cache.holidays
+        .map(item => ({
+          name: item.name,
+          start: new Date(item.start)
+        }))
+        .filter(item => !Number.isNaN(item.start.getTime()))
+        .sort((a, b) => a.start - b.start)
+    };
+  } catch {
+    return null;
+  }
+}
+
+function saveHolidayCache(holidays) {
+  try {
+    localStorage.setItem(HOLIDAY_CACHE_KEY, JSON.stringify({
+      updatedAt: Date.now(),
+      holidays: holidays.map(item => ({
+        name: item.name,
+        start: item.start.toISOString()
+      }))
+    }));
+  } catch {}
+}
+
+function normalizeHolidayData(payloads) {
+  const map = new Map();
+  payloads.forEach(data => {
+    const holidays = data && data.holiday ? Object.values(data.holiday) : [];
+    holidays.forEach(item => {
+      if (!item || !item.date || !item.name) return;
+      const key = `${item.name}_${item.date}`;
+      if (!map.has(key)) {
+        map.set(key, {
+          name: item.name,
+          start: new Date(`${item.date}T00:00:00`)
+        });
+      }
+    });
+  });
+
+  return [...map.values()]
+    .filter(item => !Number.isNaN(item.start.getTime()))
+    .sort((a, b) => a.start - b.start);
+}
+
+async function fetchHolidayYear(year) {
+  const res = await fetch(`${HOLIDAY_API_BASE}/${year}/`, {cache:'no-store'});
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  if (data.code !== 0 && data.code !== undefined) {
+    throw new Error('holiday api error');
+  }
+  return data;
+}
+
+async function loadHolidayData() {
+  const cached = readHolidayCache();
+  if (cached && cached.holidays.length) {
+    setHolidayState(cached);
+    renderExtraCountdowns();
+  }
+
+  const year = new Date().getFullYear();
+  try {
+    const results = await Promise.all([fetchHolidayYear(year), fetchHolidayYear(year + 1)]);
+    const holidays = normalizeHolidayData(results);
+    if (!holidays.length) throw new Error('empty holidays');
+    saveHolidayCache(holidays);
+    setHolidayState({status:'ready', holidays});
+  } catch (err) {
+    if (!cached || !cached.holidays.length) {
+      setHolidayState({status:'error', holidays:[], message:'节假日数据获取失败'});
+    }
+  }
+
+  renderExtraCountdowns();
 }
 
 function getEndMin(sh, sm) {
@@ -667,12 +1005,42 @@ function tick() {
 
   const wd = ['日','一','二','三','四','五','六'];
   dateEl.textContent = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日  星期' + wd[day];
+  renderExtraCountdowns(now);
 }
 
 clockInEl.addEventListener('input', () => {
-  localStorage.setItem(CLOCK_IN_KEY, clockInEl.value);
-  tick();
+  const normalized = normalizeClockInInput(clockInEl.value);
+  if (normalized) {
+    syncClockInValue(normalized);
+    tick();
+  }
 });
+
+clockInEl.addEventListener('blur', () => {
+  if (syncClockInValue(clockInEl.value)) tick();
+});
+
+clockInEl.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if (syncClockInValue(clockInEl.value)) {
+    tick();
+    clockInEl.blur();
+  }
+});
+
+clockInPickerEl.addEventListener('input', () => {
+  if (syncClockInValue(clockInPickerEl.value)) tick();
+});
+
+clockInPickerBtnEl.addEventListener('click', () => {
+  if (typeof clockInPickerEl.showPicker === 'function') {
+    clockInPickerEl.showPicker();
+    return;
+  }
+  clockInPickerEl.focus();
+  clockInPickerEl.click();
+});
+loadHolidayData();
 setInterval(tick, 1000);
 tick();
 updateClock();

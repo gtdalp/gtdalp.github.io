@@ -272,6 +272,13 @@ body{
   letter-spacing:.02em
 }
 
+.meal-allowance-time{
+  font-size:.96rem;
+  color:rgba(245,239,230,.74);
+  font-weight:400;
+  white-space:nowrap
+}
+
 .worked-time{
   font-size:1rem;
   color:rgba(245,239,230,.68);
@@ -556,6 +563,7 @@ body{
       <div class="countdown-chip" id="countdownChip">预计下班剩余</div>
       <div class="countdown" id="countdown"></div>
       <div class="ring-label" id="ringLabel"></div>
+      <div class="meal-allowance-time" id="mealAllowanceTime">预计餐补下班时间：19:45</div>
       <div class="worked-time" id="workedTime"></div>
     </div>
   </div>
@@ -691,6 +699,7 @@ const clockInPickerEl = el('clockInPicker');
 const countdownEl = el('countdown');
 const countdownChipEl = el('countdownChip');
 const ringLabelEl = el('ringLabel');
+const mealAllowanceTimeEl = el('mealAllowanceTime');
 const workedTimeEl = el('workedTime');
 const clockOutEl  = el('clockOut');
 const ringEl      = el('ring');
@@ -971,16 +980,20 @@ async function loadHolidayData() {
 }
 
 function getEndMin(sh, sm) {
+  return getTargetEndMin(sh, sm, 480);
+}
+
+function getTargetEndMin(sh, sm, targetWorkMin) {
   const start  = sh * 60 + sm;
   const lunchS = 11 * 60 + 45;
   const lunchE = 13 * 60;
   if (start < lunchS) {
     const morning = lunchS - start;
-    if (morning >= 480) return start + 480;
-    return lunchE + (480 - morning);
+    if (morning >= targetWorkMin) return start + targetWorkMin;
+    return lunchE + (targetWorkMin - morning);
   }
-  if (start < lunchE) return lunchE + 480;
-  return start + 480;
+  if (start < lunchE) return lunchE + targetWorkMin;
+  return start + targetWorkMin;
 }
 
 function workedSec(nowS, startS) {
@@ -1007,7 +1020,10 @@ function tick() {
   const endMin = getEndMin(sh, sm);
   const endS   = endMin * 60;
   const endStr = fmtTime(endMin);
+  const mealAllowanceEndMin = getTargetEndMin(sh, sm, MEAL_ALLOWANCE_WORK / 60);
+  const mealAllowanceEndStr = fmtTime(mealAllowanceEndMin);
   clockOutEl.textContent = endStr;
+  mealAllowanceTimeEl.textContent = `预计餐补下班时间：${mealAllowanceEndStr}`;
 
   const day = now.getDay();
   const isWeekend = day === 0 || day === 6;

@@ -30,7 +30,8 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  overflow-x:hidden
+  overflow-x:hidden;
+  padding:16px
 }
 
 .container{
@@ -513,24 +514,24 @@ body{
   .ring-label{font-size:.92rem}
   .worked-time{font-size:.82rem}
   .input-row{
-    flex-direction:column;
-    align-items:stretch;
-    gap:.9rem;
+    flex-direction:row;
+    align-items:flex-end;
+    gap:24px;
     margin-bottom:1.1rem
   }
-  .field{gap:.45rem}
+  .field{flex:1;min-width:0;gap:.45rem}
   .field-label{font-size:.96rem}
   .time-wrapper,.time-input{width:100%}
   .time-input{
     width:100%;
     max-width:none;
-    font-size:1.85rem;
-    padding:.65rem 3rem .65rem 1rem;
+    font-size:1.55rem;
+    padding:.65rem 2.7rem .65rem .9rem;
     border-radius:16px
   }
-  .time-picker-btn{right:8px;width:36px;height:36px}
-  .time-picker-btn svg{width:22px;height:22px}
-  .result{font-size:2.25rem;padding:.2rem 0}
+  .time-picker-btn{right:6px;width:34px;height:34px}
+  .time-picker-btn svg{width:20px;height:20px}
+  .result{font-size:1.95rem;padding:.35rem 0}
   .sep{display:none}
   .status{font-size:1.08rem;min-height:1.3em}
   .extra-countdowns{gap:.7rem;margin-top:1rem}

@@ -51,6 +51,11 @@ input[type=time]{font-size:2rem;text-align:center}
 .income-live span{display:block;color:var(--muted);font-size:.82rem}
 .income-live b{display:block;color:var(--accent);font-size:1.45rem;margin-top:4px;font-variant-numeric:tabular-nums}
 .input-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bonus-setting{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px;padding:8px 10px;border-radius:10px;background:#ffffff05}
+.bonus-setting span{color:var(--muted)}
+.bonus-input{display:flex;align-items:center;gap:5px}
+.bonus-input input{width:76px;text-align:right}
+.bonus-input i{color:var(--muted);font-style:normal}
 .date-selects{display:grid;grid-template-columns:1.25fr .8fr .8fr;gap:6px}
 .date-selects select{min-width:0;border:1px solid var(--line);border-radius:10px;background:#292522;color:var(--text);padding:8px 5px;font:inherit;outline:none}
 .date-selects option{background:#fff;color:#201c19}
@@ -60,6 +65,11 @@ input[type=time]{font-size:2rem;text-align:center}
 .comp-line{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
 .comp-line .label{margin:0}
 .comp-line .money-live{margin:0}
+.career-line{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px;padding:10px 2px 2px}
+.career-line span{color:var(--muted)}
+.career-line b{color:var(--accent);font-size:1.45rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.totals-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}
+.totals-grid .career-line,.totals-grid .comp-line{margin:0}
 .footnote{color:var(--muted);font-size:.82rem;line-height:1.6;margin-top:13px}
 .extra{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
 .extra .panel{display:flex;justify-content:space-between;align-items:center}
@@ -362,6 +372,15 @@ input[type=time]{font-size:2rem;text-align:center}
     appearance:none;
     background-image:none;
   }
+  .bonus-setting{margin-top:6px;padding:6px 9px;font-size:14px}
+  .bonus-input input{
+    width:64px;
+    min-height:30px!important;
+    padding:3px 4px!important;
+    text-align:right!important;
+    font-size:16px;
+  }
+  .bonus-input i{font-size:14px}
   .metric-row{
     margin-top:5px;
     padding-top:6px;
@@ -378,8 +397,8 @@ input[type=time]{font-size:2rem;text-align:center}
     background:linear-gradient(120deg,rgba(232,154,47,.065),rgba(255,255,255,.028) 58%);
   }
   .earnings-panel .income-live-grid{
-    grid-template-columns:1fr 1fr;
-    grid-template-areas:"today today" "second month";
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-areas:"today today" "second minute" "month year";
   }
   .earnings-panel .income-live{
     min-width:0;
@@ -389,22 +408,67 @@ input[type=time]{font-size:2rem;text-align:center}
     gap:3px;
   }
   .earnings-panel .income-live:nth-child(1){grid-area:second}
-  .earnings-panel .income-live:nth-child(2){
+  .earnings-panel .income-live:nth-child(2){grid-area:minute}
+  .earnings-panel .income-live:nth-child(3){
     grid-area:today;
     padding:9px 11px;
     background:linear-gradient(105deg,rgba(232,154,47,.13),rgba(210,102,60,.055));
     border:1px solid rgba(232,154,47,.12);
   }
-  .earnings-panel .income-live:nth-child(2) b{font-size:clamp(22px,6.5vw,29px);color:#ffad35}
-  .earnings-panel .income-live:nth-child(3){grid-area:month}
+  .earnings-panel .income-live:nth-child(3) b{font-size:clamp(22px,6.5vw,29px);color:#ffad35}
+  .earnings-panel .income-live:nth-child(4){grid-area:month}
+  .earnings-panel .income-live:nth-child(5){grid-area:year}
+  .earnings-panel .income-live:nth-child(1),
+  .earnings-panel .income-live:nth-child(2),
+  .earnings-panel .income-live:nth-child(4),
+  .earnings-panel .income-live:nth-child(5){flex-direction:row;align-items:center}
   .earnings-panel .income-live b{max-width:100%;font-size:clamp(14px,3.8vw,17px);white-space:nowrap}
+  .career-line{
+    margin-top:6px;
+    padding:8px 10px;
+    border-radius:9px;
+    background:#ffffff04;
+    font-size:14px;
+  }
+  .career-line b{font-size:clamp(18px,5vw,23px)}
   .comp-line{margin-top:7px;padding-top:7px}
   .comp-line .money-live{
-    font-size:clamp(20px,5.5vw,27px);
+    flex:1;
+    min-width:0;
+    max-width:100%;
+    font-size:clamp(16px,4.5vw,20px);
     color:#ffab32;
     letter-spacing:-.03em;
     white-space:nowrap;
+    text-align:right;
   }
+  .totals-grid{grid-template-columns:1fr;gap:5px;margin-top:6px}
+  .totals-grid .career-line,
+  .totals-grid .comp-line{
+    min-width:0;
+    min-height:42px;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    gap:4px;
+    padding:7px 9px;
+    border:1px solid #ffffff08;
+    border-radius:9px;
+    background:#ffffff04;
+  }
+  .totals-grid .career-line b,
+  .totals-grid .comp-line .money-live{
+    width:auto;
+    max-width:72%;
+    overflow:hidden;
+    font-size:clamp(14px,4vw,18px);
+    line-height:1.2;
+    text-align:right;
+    text-overflow:ellipsis;
+  }
+  .totals-grid .career-line span,
+  .totals-grid .comp-line .label{white-space:nowrap}
   .panel.full{
     border-color:rgba(232,154,47,.13);
     background:linear-gradient(110deg,rgba(232,154,47,.075),rgba(255,255,255,.025) 55%);
@@ -430,11 +494,19 @@ input[type=time]{font-size:2rem;text-align:center}
   .panel.full .hint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .input-pair{grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:6px}
   .earnings-panel .income-live:nth-child(1),
-  .earnings-panel .income-live:nth-child(3){flex-direction:column;align-items:flex-start}
+  .earnings-panel .income-live:nth-child(2),
+  .earnings-panel .income-live:nth-child(4),
+  .earnings-panel .income-live:nth-child(5){flex-direction:column;align-items:flex-start}
   .schedule-row{gap:5px}
   .schedule-item{padding:6px}
   .comp-line .label{max-width:42%}
-  .comp-line .money-live{font-size:20px}
+  .comp-line .money-live{font-size:clamp(16px,4.5vw,18px)}
+}
+
+@media(max-width:560px) and (max-height:950px){
+  .hero{width:min(52vw,185px);height:min(52vw,185px)}
+  .hero-inner{padding:14px}
+  .container{row-gap:4px}
 }
 
 @media(max-width:560px) and (max-height:760px){
@@ -475,13 +547,13 @@ input[type=time]{font-size:2rem;text-align:center}
   </div>
   <div class="status" id="status">专注工作中</div>
 
-  <h2 class="section-title">我的打工账本 <small>数据仅保存在本机</small></h2>
   <div class="grid">
     <section class="panel profile-panel">
       <div class="input-pair">
         <label><span class="label">入职日期</span><span class="date-selects"><select id="hireYear" aria-label="入职年份"><option value="">年份</option></select><select id="hireMonth" aria-label="入职月份"><option value="">月</option></select><select id="hireDay" aria-label="入职日期"><option value="">日</option></select></span><input id="hireDate" type="hidden"></label>
         <label><span class="label">税前月薪（元）</span><input id="salary" type="number" min="0" step="100" placeholder="例如 10000" inputmode="decimal"></label>
       </div>
+      <label class="bonus-setting"><span>年终奖</span><span class="bonus-input"><input id="bonusMonths" type="number" min="0" max="24" step="0.5" value="0" inputmode="decimal"><i>个月</i></span></label>
       <div class="metric-row">
         <div class="metric"><span>已入职</span><b id="tenureDays">--</b></div>
         <div class="metric"><span>补偿年限 N</span><b id="compYears">--</b></div>
@@ -490,13 +562,18 @@ input[type=time]{font-size:2rem;text-align:center}
     </section>
     <section class="panel earnings-panel">
       <div class="income-live-grid">
-        <div class="income-live"><span>工作每秒收入</span><b id="perSecond">¥0.0000</b></div>
+        <div class="income-live"><span>每秒</span><b id="perSecond">¥0.0000</b></div>
+        <div class="income-live"><span>每分钟</span><b id="perMinute">¥0.0000</b></div>
         <div class="income-live"><span>今日已累计</span><b id="todayEarned">¥0.00</b></div>
-        <div class="income-live"><span>本月已累计</span><b id="monthEarned">¥0.00</b></div>
+        <div class="income-live"><span>本月累计</span><b id="monthEarned">¥0.00</b></div>
+        <div class="income-live"><span>今年累计</span><b id="yearEarned">¥0.00</b></div>
       </div>
-      <div class="comp-line">
-        <span class="label">N+1 补偿</span>
-        <div class="money-live" id="compensation">¥0.00</div>
+      <div class="totals-grid">
+        <div class="career-line"><span>入职累计</span><b id="careerEarned">¥0.00</b></div>
+        <div class="comp-line">
+          <span class="label">N+1 补偿</span>
+          <div class="money-live" id="compensation">¥0.00</div>
+        </div>
       </div>
     </section>
   </div>
@@ -505,6 +582,7 @@ input[type=time]{font-size:2rem;text-align:center}
 const $=id=>document.getElementById(id), DAY=86400000;
 const clockIn=$('clockIn'), hireDate=$('hireDate'), salary=$('salary'), payDay=$('payDay');
 const hireYear=$('hireYear'),hireMonth=$('hireMonth'),hireDay=$('hireDay');
+const bonusMonths=$('bonusMonths');
 const pad=n=>String(n).padStart(2,'0');
 const money=n=>new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY',minimumFractionDigits:2}).format(n||0);
 const money4=n=>new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY',minimumFractionDigits:4,maximumFractionDigits:4}).format(n||0);
@@ -513,7 +591,8 @@ if(saved.clockIn) clockIn.value=saved.clockIn;
 if(saved.hireDate) hireDate.value=saved.hireDate;
 if(saved.salary) salary.value=saved.salary;
 if(saved.payDay&&saved.payDay>=1&&saved.payDay<=31)payDay.value=saved.payDay;
-function persist(){localStorage.setItem('gohome-settings',JSON.stringify({clockIn:clockIn.value,hireDate:hireDate.value,salary:salary.value,payDay:payDay.value}))}
+if(saved.bonusMonths!==undefined)bonusMonths.value=saved.bonusMonths;
+function persist(){localStorage.setItem('gohome-settings',JSON.stringify({clockIn:clockIn.value,hireDate:hireDate.value,salary:salary.value,payDay:payDay.value,bonusMonths:bonusMonths.value}))}
 function localDate(v){if(!v)return null;const [y,m,d]=v.split('-').map(Number);return new Date(y,m-1,d)}
 function fillSelect(select,placeholder,values,suffix){
   select.innerHTML=`<option value="">${placeholder}</option>`+values.map(v=>`<option value="${v}">${v}${suffix}</option>`).join('');
@@ -571,14 +650,23 @@ function updateIncome(now,workedSeconds=0){
   }
   const monthAccrued=Math.min(monthly,completedWorkdays*daily+perSec*workedSeconds);
   $('perSecond').textContent=money4(perSec);
+  $('perMinute').textContent=money4(perSec*60);
   $('todayEarned').textContent=money(perSec*workedSeconds);
   $('monthEarned').textContent=money(monthAccrued);
   const start=localDate(hireDate.value);
-  if(!start){$('tenureDays').textContent='--';$('compYears').textContent='--';$('nPlusOneMonths').textContent='--';$('compensation').textContent=money(0);return}
-  if(start>now){$('tenureDays').textContent='日期有误';$('compYears').textContent='--';$('nPlusOneMonths').textContent='--';$('compensation').textContent=money(0);return}
+  if(!start){$('tenureDays').textContent='--';$('compYears').textContent='--';$('nPlusOneMonths').textContent='--';$('compensation').textContent=money(0);$('careerEarned').textContent=money(0);$('yearEarned').textContent=money(0);return}
+  if(start>now){$('tenureDays').textContent='日期有误';$('compYears').textContent='--';$('nPlusOneMonths').textContent='--';$('compensation').textContent=money(0);$('careerEarned').textContent=money(0);$('yearEarned').textContent=money(0);return}
   const days=daysBetween(start,now),n=compN(start,now),months=n+1;
+  const bonus=Math.min(24,Math.max(0,Number(bonusMonths.value)||0));
+  const careerIncome=monthly*(12+bonus)*days/365.2425;
+  const thisYearStart=new Date(now.getFullYear(),0,1);
+  const effectiveYearStart=start>thisYearStart?start:thisYearStart;
+  const yearIncomeDays=daysBetween(effectiveYearStart,now);
+  const yearIncome=monthly*(12+bonus)*yearIncomeDays/365.2425;
   $('tenureDays').textContent=`${days} 天`;$('compYears').textContent=`${n} 个月`;$('nPlusOneMonths').textContent=`${months} 个月`;
   $('compensation').textContent=money(monthly*months);
+  $('careerEarned').textContent=money(careerIncome);
+  $('yearEarned').textContent=money(yearIncome);
 }
 let holidays=[
   {name:'中秋节',date:new Date(2026,8,25)},
@@ -639,14 +727,18 @@ function update(){
   let pay=paydayDate(now.getFullYear(),now.getMonth(),configuredPayDay);
   if(startDay(pay)<startDay(now))pay=paydayDate(now.getFullYear(),now.getMonth()+1,configuredPayDay);
   const pd=Math.round((startDay(pay)-startDay(now))/DAY);$('payday').textContent=pd===0?'今天':`${pd} 天`;
-  $('paydayLabel').textContent=`距离发薪（${configuredPayDay}日）`;
+  $('paydayLabel').textContent='距离发薪';
   updateIncome(now,worked);
 }
-[clockIn,salary,payDay].forEach(el=>el.addEventListener('input',()=>{persist();update()}));
+[clockIn,salary,payDay,bonusMonths].forEach(el=>el.addEventListener('input',()=>{persist();update()}));
 [hireYear,hireMonth].forEach(el=>el.addEventListener('change',()=>{refreshHireDays();commitHireDate()}));
 hireDay.addEventListener('change',commitHireDate);
 payDay.addEventListener('blur',()=>{
   payDay.value=String(Math.min(31,Math.max(1,Number(payDay.value)||15)));
+  persist();update();
+});
+bonusMonths.addEventListener('blur',()=>{
+  bonusMonths.value=String(Math.min(24,Math.max(0,Number(bonusMonths.value)||0)));
   persist();update();
 });
 loadHolidays();update();setInterval(update,1000);

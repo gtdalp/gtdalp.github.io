@@ -1,1114 +1,492 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>下班倒计时</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-
-:root{
-  --bg:#141210;
-  --text:#f5efe6;
-  --muted:#6e6560;
-  --accent:#e0922e;
-  --accent-end:#cc5f3a;
-  --surface:rgba(255,255,255,.06);
-  --border:rgba(255,255,255,.1);
-  --surface-strong:rgba(255,255,255,.035);
-  --ring-track:rgba(255,255,255,.045);
-  --ring-glow:rgba(224,146,46,.16)
-}
-
-html,body{height:100%}
-
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow-x:hidden;
-  padding:16px
-}
-
-.container{
-  text-align:center;
-  width:100%;
-  max-width:800px;
-  padding:2rem 2rem 3rem
-}
-
-/* date */
-.date{
-  font-size:1.3rem;
-  color:var(--muted);
-  font-weight:300;
-  letter-spacing:.06em;
-  margin-bottom:2rem
-}
-
-/* flip clock */
-.flip-clock{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:.55rem;
-  margin-bottom:2.5rem
-}
-
-.flip-clock .sep-colon{
-  font-size:3rem;
-  font-weight:700;
-  color:rgba(245,239,230,.96);
-  padding:0 .1rem;
-  line-height:88px;
-  text-shadow:0 0 12px rgba(255,255,255,.04)
-}
-
-.flip-card{
-  position:relative;
-  width:66px;
-  height:88px;
-  border-radius:16px;
-  overflow:hidden;
-  perspective:1200px;
-  background:linear-gradient(180deg,#2a2724 0%,#1a1715 100%);
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 16px 32px rgba(0,0,0,.28)
-}
-
-.flip-card::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0) 22%,rgba(0,0,0,.14) 100%);
-  pointer-events:none;
-  z-index:8
-}
-
-.flip-card::after{
-  content:'';
-  position:absolute;
-  left:0;
-  right:0;
-  top:50%;
-  height:2px;
-  transform:translateY(-1px);
-  background:linear-gradient(90deg,rgba(255,255,255,.03),rgba(0,0,0,.75) 14%,rgba(0,0,0,.75) 86%,rgba(255,255,255,.03));
-  box-shadow:0 1px 0 rgba(255,255,255,.05);
-  z-index:9
-}
-
-.flip-base,
-.flip-panel{
-  position:absolute;
-  inset:0;
-}
-
-.flip-base{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:5.1rem;
-  font-weight:650;
-  line-height:1;
-  color:rgba(245,239,230,.98);
-  text-shadow:0 1px 0 rgba(255,255,255,.04);
-  z-index:1
-}
-
-.flip-panel{
-  height:50%;
-  overflow:hidden;
-  background:#1d1a18;
-}
-
-.flip-static.top,
-.flip-flap.top{top:0;z-index:3}
-.flip-static.bottom,
-.flip-flap.bottom{top:50%;z-index:2;background:linear-gradient(180deg,#181513 0%,#211d1a 100%)}
-
-.flip-panel .digit{
-  position:absolute;
-  left:0;
-  width:100%;
-  height:88px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:5.1rem;
-  font-weight:650;
-  line-height:1;
-  color:rgba(245,239,230,.98);
-  text-shadow:0 1px 0 rgba(255,255,255,.04)
-}
-
-.flip-static.top .digit,
-.flip-flap.top .digit{top:0}
-.flip-static.bottom .digit,
-.flip-flap.bottom .digit{top:-44px}
-
-.flip-flap{
-  opacity:0;
-  backface-visibility:hidden;
-  transform-style:preserve-3d;
-  z-index:6
-}
-
-.flip-flap.top{
-  transform-origin:bottom center;
-  background:linear-gradient(180deg,#2d2926 0%,#1d1a18 100%)
-}
-
-.flip-flap.bottom{
-  transform-origin:top center;
-  background:linear-gradient(180deg,#171412 0%,#24201d 100%);
-  transform:rotateX(90deg)
-}
-
-.flip-card.flipping .flip-flap{opacity:1}
-.flip-card.flipping .flip-flap.top{animation:flipTop .56s cubic-bezier(.22,.61,.36,1) forwards}
-.flip-card.flipping .flip-flap.bottom{animation:flipBottom .56s cubic-bezier(.22,.61,.36,1) forwards}
-
-@keyframes flipTop{
-  0%{transform:rotateX(0deg);filter:brightness(1)}
-  49%{transform:rotateX(-89deg);filter:brightness(.72)}
-  50%,100%{opacity:0;transform:rotateX(-90deg);filter:brightness(.72)}
-}
-
-@keyframes flipBottom{
-  0%,49%{opacity:0;transform:rotateX(90deg);filter:brightness(.7)}
-  50%{opacity:1;transform:rotateX(90deg);filter:brightness(.7)}
-  100%{opacity:1;transform:rotateX(0deg);filter:brightness(1)}
-}
-/* ring */
-.ring-wrap{
-  position:relative;
-  width:360px;
-  height:360px;
-  margin:0 auto 2.5rem;
-  isolation:isolate
-}
-
-.ring-wrap::before{
-  content:'';
-  position:absolute;
-  inset:34px;
-  border-radius:50%;
-  background:radial-gradient(circle, rgba(224,146,46,.07), rgba(224,146,46,0) 62%);
-  filter:blur(10px);
-  z-index:0;
-  pointer-events:none
-}
-
-.ring-svg{
-  width:100%;
-  height:100%;
-  transform:rotate(-90deg)
-}
-
-.ring-track{
-  fill:none;
-  stroke:var(--ring-track);
-  stroke-width:2
-}
-
-.ring-progress{
-  fill:none;
-  stroke:url(#rg);
-  stroke-width:4;
-  stroke-linecap:round;
-  transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1);
-  filter:drop-shadow(0 0 12px var(--ring-glow))
-}
-
-.ring-inner{
-  position:absolute;
-  z-index:1;
-  inset:30px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:.85rem;
-  padding:2.2rem 1.8rem;
-  border-radius:50%;
-  background:radial-gradient(circle at 50% 38%, rgba(255,255,255,.045), rgba(255,255,255,.015) 52%, rgba(0,0,0,0) 72%);
-  text-align:center
-}
-
-.countdown-chip{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:34px;
-  padding:0 14px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.08);
-  background:var(--surface-strong);
-  color:var(--muted);
-  font-size:.9rem;
-  letter-spacing:.12em;
-  text-transform:uppercase
-}
-
-.countdown{
-  font-size:4.3rem;
-  font-weight:650;
-  letter-spacing:-.05em;
-  line-height:1
-}
-
-.colon-blink{animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:.3}}
-
-.ring-label{
-  font-size:1.15rem;
-  color:var(--muted);
-  font-weight:400;
-  letter-spacing:.02em
-}
-
-.meal-allowance-time{
-  font-size:.96rem;
-  color:rgba(245,239,230,.74);
-  font-weight:400;
-  white-space:nowrap
-}
-
-.worked-time{
-  font-size:1rem;
-  color:rgba(245,239,230,.68);
-  font-weight:400;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:.2rem;
-  line-height:1.35
-}
-
-.worked-main,
-.worked-meal{
-  white-space:nowrap
-}
-
-/* input */
-.input-row{
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  gap:3rem;
-  margin-bottom:2rem
-}
-
-.field{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:.75rem
-}
-
-.field-label{
-  font-size:1.1rem;
-  color:var(--muted);
-  font-weight:300
-}
-
-.time-wrapper{
-  position:relative;
-  display:inline-flex;
-  align-items:center
-}
-
-.time-input{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-size:3rem;
-  font-weight:600;
-  background:var(--surface);
-  border:1px solid var(--border);
-  color:var(--text);
-  padding:.7rem 3.5rem .7rem 1.5rem;
-  border-radius:18px;
-  text-align:center;
-  width:240px;
-  outline:none;
-  transition:border-color .25s,box-shadow .25s
-}
-
-.time-input:focus{
-  border-color:rgba(224,146,46,.4);
-  box-shadow:0 0 0 4px rgba(224,146,46,.08)
-}
-
-.time-picker-btn{
-  position:absolute;
-  right:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:42px;
-  height:42px;
-  border:none;
-  border-radius:12px;
-  background:transparent;
-  color:var(--muted);
-  cursor:pointer;
-  transition:background .2s,color .2s
-}
-
-.time-picker-btn:hover,
-.time-picker-btn:focus-visible{
-  background:rgba(255,255,255,.04);
-  color:var(--text);
-  outline:none
-}
-
-.time-picker-btn svg{
-  width:30px;
-  height:30px;
-  stroke:currentColor;
-  fill:none;
-  stroke-width:2;
-  stroke-linecap:round
-}
-
-.time-picker-native{
-  position:absolute;
-  inset:0;
-  opacity:0;
-  pointer-events:none
-}
-
-.result{
-  font-size:3rem;
-  font-weight:600;
-  color:var(--accent);
-  padding:.7rem 0
-}
-
-.sep{
-  width:24px;
-  height:1px;
-  background:var(--border);
-  margin-bottom:.8rem
-}
-
-/* status */
-.status{
-  font-size:1.3rem;
-  color:var(--accent);
-  font-weight:400;
-  min-height:1.4em
-}
-
-.extra-countdowns{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:1rem;
-  margin-top:1.5rem
-}
-
-.extra-card{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:1.2rem;
-  padding:1rem 1.35rem 1rem 1.1rem;
-  border-radius:18px;
-  border:1px solid var(--border);
-  background:var(--surface);
-  text-align:left
-}
-
-.extra-label{
-  flex:1;
-  min-width:0;
-  font-size:1rem;
-  color:var(--muted);
-  line-height:1.45
-}
-
-.extra-value{
-  flex:none;
-  margin-right:.1rem;
-  font-size:2.3rem;
-  font-weight:800;
-  font-variant-numeric:tabular-nums;
-  color:var(--accent);
-  letter-spacing:-.04em;
-  white-space:nowrap
-}
-
-.extra-sub{
-  margin-top:.35rem;
-  font-size:.9rem;
-  color:rgba(245,239,230,.62)
-}
-
-.extra-sub:empty{
-  display:none
-}
-
-/* weekend */
-.weekend .countdown-chip{
-  border-color:rgba(224,146,46,.14);
-  color:rgba(224,146,46,.78);
-  background:rgba(224,146,46,.06)
-}
-
-/* entrance */
-@keyframes up{
-  from{opacity:0;transform:translateY(12px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-.date{animation:up .6s ease-out both}
-.flip-clock{animation:up .6s .1s ease-out both}
-.ring-wrap{animation:up .6s .15s ease-out both}
-.input-row{animation:up .6s .25s ease-out both}
-.status{animation:up .6s .35s ease-out both}
-
-@media(max-width:540px){
-  .container{padding:1rem .9rem 1.4rem}
-  .date{font-size:1rem;margin-bottom:1rem}
-  .flip-clock{gap:.32rem;margin-bottom:1.35rem}
-  .ring-wrap{width:280px;height:280px}
-  .ring-inner{inset:24px;padding:1.8rem 1.2rem;gap:.7rem}
-  .countdown-chip{font-size:.78rem;padding:0 12px;min-height:30px}
-  .countdown{font-size:3.2rem}
-  .ring-label{font-size:1rem}
-  .worked-time{font-size:.9rem}
-  .weekend .countdown{font-size:2.35rem}
-  .time-input{width:200px;font-size:2.2rem;padding:.5rem 3.4rem .5rem 1rem}
-  .time-picker-btn{right:8px;width:38px;height:38px}
-  .time-picker-btn svg{width:24px;height:24px}
-  .input-row{gap:1rem;align-items:stretch}
-  .flip-card{width:50px;height:68px;border-radius:12px}
-  .flip-clock .sep-colon{font-size:2.35rem;line-height:68px}
-  .flip-base,.flip-panel .digit{font-size:4rem}
-  .flip-panel .digit{height:68px}
-  .flip-static.bottom .digit,.flip-flap.bottom .digit{top:-34px}
-  .extra-countdowns{grid-template-columns:1fr}
-  .extra-card{padding:.95rem 1.15rem .95rem 1rem;gap:1rem}
-  .extra-label{font-size:.95rem}
-  .extra-value{font-size:2.05rem}
-}
-
-@media(max-width:420px){
-  .container{padding:.85rem .7rem 1rem}
-  .date{font-size:.92rem;margin-bottom:.8rem}
-  .flip-clock{gap:.2rem;margin-bottom:1rem}
-  .flip-card{width:42px;height:58px;border-radius:10px}
-  .flip-clock .sep-colon{font-size:1.8rem;line-height:58px;padding:0}
-  .flip-base,.flip-panel .digit{font-size:3.2rem}
-  .flip-panel .digit{height:58px}
-  .flip-static.bottom .digit,.flip-flap.bottom .digit{top:-29px}
-  .ring-wrap{width:min(76vw,250px);height:min(76vw,250px);margin:0 auto 1.15rem}
-  .ring-inner{inset:20px;padding:1.15rem .9rem;gap:.45rem}
-  .countdown-chip{min-height:28px;font-size:.72rem;padding:0 10px;letter-spacing:.08em}
-  .countdown{font-size:2.55rem}
-  .ring-label{font-size:.92rem}
-  .worked-time{font-size:.82rem}
-  .input-row{
-    flex-direction:row;
-    align-items:flex-end;
-    gap:24px;
-    margin-bottom:1.1rem
-  }
-  .field{flex:1;min-width:0;gap:.45rem}
-  .field-label{font-size:.96rem}
-  .time-wrapper,.time-input{width:100%}
-  .time-input{
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#141210;--card:#201d1a;--text:#f5efe6;--muted:#8b817a;--accent:#e89a2f;--accent2:#d2663c;--line:rgba(255,255,255,.1)}
+body{min-height:100vh;background:radial-gradient(circle at 50% 5%,#211b17 0,#141210 36%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;padding:26px 16px}
+.container{width:min(760px,100%);margin:auto;text-align:center}
+.date{color:var(--muted);font-size:1.15rem;letter-spacing:.05em;margin:12px 0 24px}
+.clock{font-size:clamp(3.1rem,11vw,5.5rem);font-weight:750;letter-spacing:.04em;font-variant-numeric:tabular-nums;margin-bottom:26px}
+.clock span{display:inline-block;padding:.05em .12em;border:1px solid var(--line);border-radius:15px;background:linear-gradient(#2a2724 49%,#171513 50%);box-shadow:0 18px 38px #0005}
+.hero{position:relative;width:min(390px,90vw);aspect-ratio:1;margin:0 auto 34px;display:grid;place-items:center}
+.hero:before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--accent) var(--progress),var(--accent2) 0 var(--progress),rgba(255,255,255,.05) 0);filter:drop-shadow(0 0 13px #e89a2f26)}
+.hero:after{content:"";position:absolute;inset:5px;background:radial-gradient(circle,#231e19,#141210 70%);border-radius:50%}
+.hero-inner{z-index:1;display:grid;gap:10px;justify-items:center;padding:25px}
+.chip{color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:7px 15px}
+.countdown{font-size:clamp(2.7rem,10vw,4.25rem);font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.04em}
+.sub{color:var(--muted);line-height:1.55}
+.work-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:end;margin-bottom:18px}
+.label{display:block;color:var(--muted);margin-bottom:9px}
+input{width:100%;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.055);color:var(--text);padding:13px 14px;font:inherit;font-size:1.15rem;outline:none}
+input:focus{border-color:#e89a2f88;box-shadow:0 0 0 4px #e89a2f12}
+input[type=time]{font-size:2rem;text-align:center}
+.result{color:var(--accent);font-size:2.7rem;font-weight:750;padding:7px;font-variant-numeric:tabular-nums}
+.status{color:var(--accent);font-size:1.15rem;min-height:30px;margin:20px}
+.section-title{text-align:left;font-size:1.15rem;margin:32px 0 13px}
+.section-title small{color:var(--muted);font-weight:400;margin-left:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel{background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:20px;padding:20px;text-align:left}
+.panel.full{grid-column:1/-1}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:17px}
+.metric{background:#ffffff08;border-radius:13px;padding:13px 10px}
+.metric b{display:block;color:var(--accent);font-size:1.55rem;margin-top:5px;font-variant-numeric:tabular-nums}
+.metric span,.hint{color:var(--muted);font-size:.88rem;line-height:1.5}
+.money-live{font-size:2.2rem;color:var(--accent);font-weight:800;font-variant-numeric:tabular-nums;margin:13px 0 5px}
+.money-live small{font-size:.95rem;color:var(--muted);font-weight:400}
+.income-live-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.income-live{background:#ffffff08;border-radius:13px;padding:12px}
+.income-live span{display:block;color:var(--muted);font-size:.82rem}
+.income-live b{display:block;color:var(--accent);font-size:1.45rem;margin-top:4px;font-variant-numeric:tabular-nums}
+.input-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.profile-panel{grid-column:1/-1}
+.earnings-panel{grid-column:1/-1}
+.earnings-panel .income-live-grid{grid-template-columns:repeat(3,1fr)}
+.comp-line{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.comp-line .label{margin:0}
+.comp-line .money-live{margin:0}
+.footnote{color:var(--muted);font-size:.82rem;line-height:1.6;margin-top:13px}
+.extra{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.extra .panel{display:flex;justify-content:space-between;align-items:center}
+.extra b{color:var(--accent);font-size:1.8rem;white-space:nowrap}
+@media(max-width:560px){
+  body{padding:0;align-items:flex-start;background:#141210}
+  .container{
+    position:relative;
     width:100%;
-    max-width:none;
-    font-size:1.55rem;
-    padding:.65rem 2.7rem .65rem .9rem;
-    border-radius:16px
+    min-height:100svh;
+    padding:12px 14px 10px;
+    background:radial-gradient(circle at 50% 18%,#211b16 0,#141210 43%);
   }
-  .time-picker-btn{right:6px;width:34px;height:34px}
-  .time-picker-btn svg{width:20px;height:20px}
-  .result{font-size:1.95rem;padding:.35rem 0}
-  .sep{display:none}
-  .status{font-size:1.08rem;min-height:1.3em}
-  .extra-countdowns{gap:.7rem;margin-top:1rem}
-  .extra-card{padding:.8rem 1rem .8rem .9rem;border-radius:16px;gap:.85rem}
-  .extra-label{font-size:.82rem;line-height:1.35}
-  .extra-value{font-size:1.85rem}
-  .extra-sub{font-size:.8rem;line-height:1.35}
+  .date{height:32px;margin:0;text-align:left;font-size:14px;line-height:32px;letter-spacing:.02em}
+  .clock{position:absolute;right:14px;top:12px;margin:0;font-size:1rem;letter-spacing:.04em}
+  .clock span{padding:6px 10px;border-radius:10px;box-shadow:none;background:#ffffff0a;border-color:#ffffff12}
+  .hero{width:210px;height:210px;margin:2px auto 8px}
+  .hero:before{filter:drop-shadow(0 0 9px #e89a2f20)}
+  .hero:after{inset:4px}
+  .hero-inner{gap:5px;padding:17px}
+  .chip{padding:4px 10px;font-size:14px}
+  .countdown{font-size:2.35rem}
+  .sub{font-size:14px;line-height:1.38}
+  .work-row{gap:14px;margin:0 4px 1px}
+  .work-row>label,.work-row>div{min-width:0}
+  .label{font-size:14px;margin-bottom:4px}
+  input{min-height:38px;border-radius:10px;padding:7px 9px;font-size:16px;background:#ffffff09}
+  input[type=time]{min-height:42px;font-size:1.25rem;padding:6px 8px}
+  .result{font-size:1.65rem;padding:4px 2px}
+  .status{font-size:14px;min-height:19px;margin:3px 0 6px}
+  .section-title{font-size:18px;margin:0 1px 6px;letter-spacing:.01em}
+  .section-title small{float:right;font-size:14px;margin:2px 0 0;color:#766d67}
+  .grid{grid-template-columns:1fr;gap:6px}
+  .panel{
+    border-radius:15px;
+    padding:8px 10px;
+    background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
+    border-color:#ffffff12;
+    box-shadow:0 7px 20px #00000018;
+  }
+  .panel.full{grid-column:1/-1;display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 9px;padding:8px 11px}
+  .panel.full .label{grid-column:1/2;margin:0}
+  .panel.full .money-live{grid-column:2/3;grid-row:1/2;margin:0;font-size:1.35rem}
+  .panel.full .hint{grid-column:1/-1;font-size:14px}
+  .metric-row{grid-template-columns:repeat(3,1fr);gap:4px;margin-top:6px}
+  .metric{border-radius:8px;padding:6px 2px;text-align:center;background:#ffffff07}
+  .metric span{font-size:14px;white-space:nowrap}
+  .metric b{font-size:16px;margin-top:2px;white-space:nowrap}
+  .money-live{font-size:1.3rem;margin:7px 0 2px}
+  .money-live small{font-size:.66rem}
+  .income-live-grid{gap:5px;margin-top:6px}
+  .income-live{display:flex;align-items:center;justify-content:space-between;border-radius:8px;padding:6px 8px}
+  .income-live span{font-size:14px}
+  .income-live b{font-size:16px;margin:0}
+  .hint{font-size:14px;line-height:1.35}
+  .footnote{display:none}
+  .extra{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+  .extra .panel{min-width:0;padding:7px 9px;border-radius:11px}
+  .extra .hint{max-width:68%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .extra b{font-size:16px}
+}
+@media(max-width:360px){
+  .container{padding:8px 10px}
+  .clock{right:12px;top:12px}
+  .hero{width:195px;height:195px;margin-bottom:5px}
+  .countdown{font-size:2.15rem}
+  .grid{gap:5px}
+  .panel{padding:8px 9px}
+  .metric{padding:5px 2px}
+  .metric b{font-size:.75rem}
+  .extra{margin-top:5px}
+}
+
+/* Adaptive mobile composition: width and height both participate in layout. */
+@media(max-width:560px){
+  body{min-height:100svh;overflow-x:hidden;overflow-y:auto}
+  .container{
+    min-height:100svh;
+    padding:clamp(10px,2.2vw,18px);
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-auto-rows:max-content;
+    align-content:space-between;
+    column-gap:10px;
+    row-gap:clamp(5px,.75svh,9px);
+    background:
+      radial-gradient(circle at 82% 4%,rgba(232,154,47,.08),transparent 25%),
+      radial-gradient(circle at 18% 26%,rgba(210,102,60,.055),transparent 28%),
+      #141210;
+  }
+  .date{
+    grid-column:1;
+    align-self:center;
+    height:auto;
+    line-height:1.25;
+    color:#a49a92;
+  }
+  .clock{
+    position:static;
+    grid-column:2;
+    align-self:center;
+    justify-self:end;
+    font-size:clamp(16px,4.3vw,20px);
+  }
+  .clock span{
+    padding:7px 11px;
+    border-radius:12px;
+    background:linear-gradient(145deg,#292522,#1c1917);
+    border-color:#ffffff14;
+    box-shadow:inset 0 1px #ffffff0a,0 7px 18px #0003;
+  }
+  .hero{
+    grid-column:1/-1;
+    width:min(58vw,clamp(180px,22svh,220px));
+    height:min(58vw,clamp(180px,22svh,220px));
+    margin:0 auto;
+  }
+  .hero:before{
+    background:conic-gradient(from -18deg,var(--accent) var(--progress),var(--accent2) 0 var(--progress),rgba(255,255,255,.055) 0);
+    filter:drop-shadow(0 0 12px rgba(232,154,47,.17));
+  }
+  .hero:after{background:radial-gradient(circle at 50% 38%,#211c18,#141210 72%)}
+  .hero-inner{gap:clamp(4px,.55svh,7px)}
+  .chip{background:#ffffff05;border-color:#ffffff12;color:#aaa098}
+  .countdown{font-size:clamp(34px,10vw,44px);text-shadow:0 2px 18px #0008}
+  .sub{width:100%;font-size:14px;color:#9e948c;line-height:1.28}
+  .sub span{display:block;white-space:nowrap}
+  .work-row{
+    grid-column:1/-1;
+    margin:0;
+    padding:9px 12px;
+    gap:12px;
+    align-items:center;
+    border:1px solid #ffffff10;
+    border-radius:16px;
+    background:linear-gradient(145deg,#ffffff0a,#ffffff04);
+  }
+  .work-row>label,.work-row>div{flex:1}
+  .work-row>div{border-left:1px solid #ffffff0d}
+  .work-row .label{color:#938981}
+  input[type=time]{
+    min-height:38px;
+    border:0;
+    padding:3px 8px;
+    background:transparent;
+    color:#f8f3ec;
+    box-shadow:none;
+  }
+  .result{line-height:38px;padding:0;color:#f0a12f}
+  .status{
+    display:none;
+  }
+  .section-title{
+    grid-column:1/-1;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin:2px 1px 0;
+    font-size:clamp(18px,4.8vw,21px);
+  }
+  .section-title small{float:none;margin:0;font-size:14px;font-weight:400}
+  .grid{grid-column:1/-1;gap:clamp(5px,.65svh,8px)}
+  .panel{
+    padding:clamp(8px,1.15svh,11px) 11px;
+    border-radius:16px;
+    background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.027));
+    box-shadow:inset 0 1px #ffffff08,0 9px 24px #00000020;
+  }
+  .panel input:not([type=time]){
+    min-height:38px;
+    border-color:#ffffff11;
+    background:#ffffff08;
+  }
+  .profile-panel{padding:6px 12px 9px}
+  .input-pair{grid-template-columns:1fr;gap:0}
+  .input-pair label{
+    display:grid;
+    grid-template-columns:92px minmax(0,1fr);
+    align-items:center;
+    gap:8px;
+    min-height:48px;
+  }
+  .input-pair label+label{border-top:1px solid #ffffff0c}
+  .input-pair .label{margin:0;text-align:left}
+  .profile-panel input:not([type=time]){
+    min-width:0;
+    min-height:36px;
+    padding:6px 9px;
+    border:0;
+    background:#ffffff06;
+    text-align:right;
+  }
+  .metric-row{
+    margin-top:5px;
+    padding-top:6px;
+    border-top:1px solid #ffffff0c;
+  }
+  .metric{
+    background:linear-gradient(145deg,#ffffff08,#ffffff03);
+    border:1px solid #ffffff05;
+  }
+  .metric b,.income-live b,.extra b{color:#f0a12f}
+  .income-live{background:linear-gradient(145deg,#ffffff08,#ffffff03)}
+  .earnings-panel{
+    border-color:rgba(232,154,47,.13);
+    background:linear-gradient(120deg,rgba(232,154,47,.065),rgba(255,255,255,.028) 58%);
+  }
+  .earnings-panel .income-live-grid{
+    grid-template-columns:1fr 1fr;
+    grid-template-areas:"today today" "second month";
+  }
+  .earnings-panel .income-live{
+    min-width:0;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    gap:3px;
+  }
+  .earnings-panel .income-live:nth-child(1){grid-area:second}
+  .earnings-panel .income-live:nth-child(2){
+    grid-area:today;
+    padding:9px 11px;
+    background:linear-gradient(105deg,rgba(232,154,47,.13),rgba(210,102,60,.055));
+    border:1px solid rgba(232,154,47,.12);
+  }
+  .earnings-panel .income-live:nth-child(2) b{font-size:clamp(22px,6.5vw,29px);color:#ffad35}
+  .earnings-panel .income-live:nth-child(3){grid-area:month}
+  .earnings-panel .income-live b{max-width:100%;font-size:clamp(14px,3.8vw,17px);white-space:nowrap}
+  .comp-line{margin-top:7px;padding-top:7px}
+  .comp-line .money-live{
+    font-size:clamp(20px,5.5vw,27px);
+    color:#ffab32;
+    letter-spacing:-.03em;
+    white-space:nowrap;
+  }
+  .panel.full{
+    border-color:rgba(232,154,47,.13);
+    background:linear-gradient(110deg,rgba(232,154,47,.075),rgba(255,255,255,.025) 55%);
+  }
+  .panel.full .money-live{
+    font-size:clamp(20px,5.5vw,27px);
+    color:#ffab32;
+    letter-spacing:-.03em;
+  }
+  .extra{
+    grid-column:1/-1;
+    margin:0;
+    gap:7px;
+  }
+  .extra .panel{box-shadow:none;background:#ffffff06}
+}
+
+@media(max-width:380px){
+  .container{row-gap:4px;padding:9px 10px}
+  .section-title small{display:none}
+  .work-row{padding:7px 9px}
+  .panel{padding:7px 9px}
+  .panel.full .hint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .input-pair{grid-template-columns:1fr;gap:0}
+  .input-pair label{grid-template-columns:84px minmax(0,1fr)}
+  .earnings-panel .income-live:nth-child(1),
+  .earnings-panel .income-live:nth-child(3){flex-direction:column;align-items:flex-start}
+  .comp-line .label{max-width:42%}
+  .comp-line .money-live{font-size:20px}
+}
+
+@media(max-width:560px) and (max-height:760px){
+  .container{align-content:start;row-gap:4px;padding-top:8px;padding-bottom:8px}
+  .hero{width:min(50vw,170px);height:min(50vw,170px)}
+  .hero-inner{padding:13px}
+  .countdown{font-size:34px}
+  .work-row{padding-top:6px;padding-bottom:6px}
+  .status{padding-top:2px;padding-bottom:2px}
+  .section-title{font-size:18px}
+  .section-title small{display:none}
+  .panel{padding-top:6px;padding-bottom:6px}
+  .metric{padding-top:4px;padding-bottom:4px}
+  .extra .panel{padding-top:6px;padding-bottom:6px}
 }
 </style>
 </head>
 <body>
-
-<div class="container">
+<main class="container">
   <div class="date" id="date"></div>
-
-  <div class="flip-clock" id="flipClock"></div>
-
-  <div class="ring-wrap">
-    <svg class="ring-svg" viewBox="0 0 360 360">
-      <defs>
-        <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#e0922e"/>
-          <stop offset="100%" stop-color="#cc5f3a"/>
-        </linearGradient>
-      </defs>
-      <circle class="ring-track" cx="180" cy="180" r="170"/>
-      <circle class="ring-progress" id="ring" cx="180" cy="180" r="170"/>
-    </svg>
-    <div class="ring-inner">
-      <div class="countdown-chip" id="countdownChip">预计下班剩余</div>
-      <div class="countdown" id="countdown"></div>
-      <div class="ring-label" id="ringLabel"></div>
-      <div class="meal-allowance-time" id="mealAllowanceTime">预计餐补下班时间：19:45</div>
-      <div class="worked-time" id="workedTime"></div>
+  <div class="clock"><span id="clock">00:00:00</span></div>
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+      <div class="chip" id="chip">预计下班剩余</div>
+      <div class="countdown" id="countdown">00:00:00</div>
+      <div class="sub" id="workDetail"></div>
     </div>
+  </section>
+  <div class="work-row">
+    <label><span class="label">上班打卡</span><input id="clockIn" type="time" value="08:30"></label>
+    <div><span class="label">预计下班</span><div class="result" id="clockOut">17:45</div></div>
   </div>
+  <div class="status" id="status">专注工作中</div>
 
-  <div class="input-row">
-    <div class="field">
-      <span class="field-label">上班打卡</span>
-      <div class="time-wrapper">
-        <input type="text" class="time-input" id="clockIn" value="08:30" inputmode="numeric" placeholder="08:30" autocomplete="off" spellcheck="false">
-        <button type="button" class="time-picker-btn" id="clockInPickerBtn" aria-label="选择上班打卡时间">
-          <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10"/>
-            <polyline points="12 6 12 12 16 14"/>
-          </svg>
-        </button>
-        <input type="time" class="time-picker-native" id="clockInPicker" value="08:30" tabindex="-1" aria-hidden="true">
+  <h2 class="section-title">我的打工账本 <small>数据仅保存在本机</small></h2>
+  <div class="grid">
+    <section class="panel profile-panel">
+      <div class="input-pair">
+        <label><span class="label">入职日期</span><input id="hireDate" type="date"></label>
+        <label><span class="label">税前月薪（元）</span><input id="salary" type="number" min="0" step="100" placeholder="例如 10000" inputmode="decimal"></label>
       </div>
-    </div>
-    <div class="sep"></div>
-    <div class="field">
-      <span class="field-label">预计下班</span>
-      <div class="result" id="clockOut">17:45</div>
-    </div>
+      <div class="metric-row">
+        <div class="metric"><span>已入职</span><b id="tenureDays">--</b></div>
+        <div class="metric"><span>补偿年限 N</span><b id="compYears">--</b></div>
+        <div class="metric"><span>N+1 月数</span><b id="nPlusOneMonths">--</b></div>
+      </div>
+    </section>
+    <section class="panel earnings-panel">
+      <div class="income-live-grid">
+        <div class="income-live"><span>工作每秒收入</span><b id="perSecond">¥0.0000</b></div>
+        <div class="income-live"><span>今日已累计</span><b id="todayEarned">¥0.00</b></div>
+        <div class="income-live"><span>本月已累计</span><b id="monthEarned">¥0.00</b></div>
+      </div>
+      <div class="hint" id="salaryRates">按月计薪天数 21.75 天、每天 8 小时估算</div>
+      <div class="comp-line">
+        <span class="label">N+1 经济补偿估算</span>
+        <div class="money-live" id="compensation">¥0.00</div>
+      </div>
+      <div class="hint" id="compFormula">填写入职日期和月薪后自动计算</div>
+      <div class="footnote">估算口径：N 按每满 1 年计 1 个月；超过 6 个月按 1 年计，不满 6 个月按 0.5 个月计，再加 1 个月代通知金。实际是否适用 N+1、工资基数、12 年上限及当地社平工资封顶规则，应以解除原因、劳动合同和当地法规为准。</div>
+    </section>
   </div>
-
-  <div class="status" id="status"></div>
-
-  <div class="extra-countdowns">
-    <div class="extra-card">
-      <div class="extra-label" id="holidayLabel">距离下个节假日放假</div>
-      <div class="extra-value" id="holidayCountdown">加载中...</div>
-      <div class="extra-sub" id="holidayDetail"></div>
-    </div>
-    <div class="extra-card">
-      <div class="extra-label" id="salaryLabel">距离发工资剩余</div>
-      <div class="extra-value" id="salaryCountdown">--</div>
-      <div class="extra-sub" id="salaryDetail"></div>
-    </div>
+  <div class="extra">
+    <section class="panel"><span class="hint" id="holidayLabel">距离下个节假日</span><b id="holidayCountdown">--</b></section>
+    <section class="panel"><span class="hint">距离发工资（15日）</span><b id="payday">--</b></section>
   </div>
-</div>
-
+</main>
 <script>
-// --- Flip Clock ---
-const flipClockEl = document.getElementById('flipClock');
-
-function makeCard(val) {
-  const card = document.createElement('div');
-  card.className = 'flip-card';
-  card.dataset.val = val;
-  card.innerHTML = `
-    <div class="flip-base">${val}</div>
-    <div class="flip-panel flip-static top"><div class="digit">${val}</div></div>
-    <div class="flip-panel flip-static bottom"><div class="digit">${val}</div></div>
-    <div class="flip-panel flip-flap top"><div class="digit">${val}</div></div>
-    <div class="flip-panel flip-flap bottom"><div class="digit">${val}</div></div>
-  `;
-  return card;
+const $=id=>document.getElementById(id), DAY=86400000;
+const clockIn=$('clockIn'), hireDate=$('hireDate'), salary=$('salary');
+const pad=n=>String(n).padStart(2,'0');
+const money=n=>new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY',minimumFractionDigits:2}).format(n||0);
+const money4=n=>new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY',minimumFractionDigits:4,maximumFractionDigits:4}).format(n||0);
+const saved=JSON.parse(localStorage.getItem('gohome-settings')||'{}');
+if(saved.clockIn) clockIn.value=saved.clockIn;
+if(saved.hireDate) hireDate.value=saved.hireDate;
+if(saved.salary) salary.value=saved.salary;
+function persist(){localStorage.setItem('gohome-settings',JSON.stringify({clockIn:clockIn.value,hireDate:hireDate.value,salary:salary.value}))}
+function localDate(v){if(!v)return null;const [y,m,d]=v.split('-').map(Number);return new Date(y,m-1,d)}
+function startDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+function daysBetween(a,b){return Math.max(0,Math.floor((startDay(b)-startDay(a))/DAY)+1)}
+function compN(start,now){
+  if(!start||start>now)return 0;
+  let years=now.getFullYear()-start.getFullYear();
+  const anniversary=new Date(now.getFullYear(),start.getMonth(),start.getDate());
+  if(anniversary>now)years--;
+  const last=new Date(start.getFullYear()+years,start.getMonth(),start.getDate());
+  const months=(now.getFullYear()-last.getFullYear())*12+now.getMonth()-last.getMonth()-(now.getDate()<last.getDate()?1:0);
+  return years+(months>=6?1:.5);
 }
-
-const cards = [];
-for (let i = 0; i < 6; i++) {
-  const card = makeCard('0');
-  flipClockEl.appendChild(card);
-  cards.push(card);
-  if (i === 1 || i === 3) {
-    const sep = document.createElement('span');
-    sep.className = 'sep-colon';
-    sep.textContent = ':';
-    flipClockEl.appendChild(sep);
+function workEndTarget(h,m,work){const start=h*60+m,lunchStart=11*60+45,lunchEnd=13*60;if(start<lunchStart){const morning=lunchStart-start;return morning>=work?start+work:lunchEnd+work-morning}return (start<lunchEnd?lunchEnd:start)+work}
+function workEnd(h,m){return workEndTarget(h,m,480)}
+function fmtSec(sec){sec=Math.max(0,Math.floor(sec));return `${pad(Math.floor(sec/3600))}:${pad(Math.floor(sec%3600/60))}:${pad(sec%60)}`}
+function updateIncome(now,workedSeconds=0){
+  const monthly=Math.max(0,Number(salary.value)||0);
+  const daily=monthly/21.75, hourly=daily/8, perSec=hourly/3600;
+  let completedWorkdays=0;
+  for(let day=1;day<now.getDate();day++){
+    const weekday=new Date(now.getFullYear(),now.getMonth(),day).getDay();
+    if(weekday!==0&&weekday!==6)completedWorkdays++;
   }
+  const monthAccrued=Math.min(monthly,completedWorkdays*daily+perSec*workedSeconds);
+  $('perSecond').textContent=money4(perSec);
+  $('todayEarned').textContent=money(perSec*workedSeconds);
+  $('monthEarned').textContent=money(monthAccrued);
+  $('salaryRates').textContent=`今日已计薪 ${Math.floor(workedSeconds/3600)} 小时 ${Math.floor(workedSeconds%3600/60)} 分 · 每小时 ${money(hourly)}`;
+  const start=localDate(hireDate.value);
+  if(!start){$('tenureDays').textContent='--';$('compYears').textContent='--';$('nPlusOneMonths').textContent='--';$('compensation').textContent=money(0);$('compFormula').textContent='填写入职日期和月薪后自动计算';return}
+  if(start>now){$('tenureDays').textContent='日期有误';$('compYears').textContent='--';$('nPlusOneMonths').textContent='--';$('compensation').textContent=money(0);$('compFormula').textContent='入职日期不能晚于今天';return}
+  const days=daysBetween(start,now),n=compN(start,now),months=n+1;
+  $('tenureDays').textContent=`${days} 天`;$('compYears').textContent=`${n} 个月`;$('nPlusOneMonths').textContent=`${months} 个月`;
+  $('compensation').textContent=money(monthly*months);
+  $('compFormula').textContent=`${money(monthly)} × (${n} + 1) 个月 = ${money(monthly*months)}`;
 }
-
-let prevDigits = [];
-
-function setPanelDigit(card, selector, value) {
-  card.querySelector(selector).textContent = value;
+let holidays=[
+  {name:'中秋节',date:new Date(2026,8,25)},
+  {name:'国庆节',date:new Date(2026,9,1)},
+  {name:'元旦',date:new Date(2027,0,1)}
+];
+function updateHoliday(now){
+  const today=startDay(now);
+  const next=holidays.filter(x=>x.date>=today).sort((a,b)=>a.date-b.date)[0];
+  if(!next){$('holidayLabel').textContent='距离下个节假日';$('holidayCountdown').textContent='--';return}
+  const days=Math.round((startDay(next.date)-today)/DAY);
+  $('holidayLabel').textContent=`距离${next.name}`;
+  $('holidayCountdown').textContent=days===0?'今天':`${days} 天`;
 }
-
-function setStaticDigit(card, value) {
-  setPanelDigit(card, '.flip-base', value);
-  setPanelDigit(card, '.flip-static.top .digit', value);
-  setPanelDigit(card, '.flip-static.bottom .digit', value);
-}
-
-function flipTo(card, newVal) {
-  const oldVal = card.dataset.val;
-  if (oldVal === newVal) return;
-
-  setPanelDigit(card, '.flip-flap.top .digit', oldVal);
-  setPanelDigit(card, '.flip-flap.bottom .digit', newVal);
-
-  card.classList.remove('flipping');
-  void card.offsetWidth;
-  card.classList.add('flipping');
-  card.dataset.val = newVal;
-
-  setTimeout(() => {
-    setStaticDigit(card, newVal);
-  }, 280);
-
-  setTimeout(() => {
-    card.classList.remove('flipping');
-  }, 560);
-}
-
-function updateClock() {
-  const now = new Date();
-  const h = String(now.getHours()).padStart(2, '0');
-  const m = String(now.getMinutes()).padStart(2, '0');
-  const s = String(now.getSeconds()).padStart(2, '0');
-  const digits = [h[0], h[1], m[0], m[1], s[0], s[1]];
-
-  if (prevDigits.length === 0) {
-    cards.forEach((card, idx) => {
-      card.dataset.val = digits[idx];
-      setStaticDigit(card, digits[idx]);
-    });
-    prevDigits = [...digits];
-    return;
-  }
-
-  for (let i = 0; i < 6; i++) {
-    if (digits[i] !== prevDigits[i]) flipTo(cards[i], digits[i]);
-  }
-  prevDigits = [...digits];
-}
-
-// --- Main Logic ---
-const el = id => document.getElementById(id);
-const clockInEl   = el('clockIn');
-const clockInPickerBtnEl = el('clockInPickerBtn');
-const clockInPickerEl = el('clockInPicker');
-const countdownEl = el('countdown');
-const countdownChipEl = el('countdownChip');
-const ringLabelEl = el('ringLabel');
-const mealAllowanceTimeEl = el('mealAllowanceTime');
-const workedTimeEl = el('workedTime');
-const clockOutEl  = el('clockOut');
-const ringEl      = el('ring');
-const dateEl      = el('date');
-const statusEl    = el('status');
-const holidayLabelEl = el('holidayLabel');
-const holidayCountdownEl = el('holidayCountdown');
-const holidayDetailEl = el('holidayDetail');
-const salaryLabelEl = el('salaryLabel');
-const salaryCountdownEl = el('salaryCountdown');
-const salaryDetailEl = el('salaryDetail');
-
-const R = 170;
-const C = 2 * Math.PI * R;
-ringEl.style.strokeDasharray  = C;
-ringEl.style.strokeDashoffset = C;
-
-const LUNCH_S = 11 * 3600 + 45 * 60;
-const LUNCH_E = 13 * 3600;
-const WORK    = 8 * 3600;
-const MEAL_ALLOWANCE_WORK = 10 * 3600;
-
-const pad = n => String(n).padStart(2, '0');
-const CLOCK_IN_KEY = 'camclaw_clock_in';
-const HOLIDAY_CACHE_KEY = 'camclaw_holiday_cache_v1';
-const HOLIDAY_API_BASE = 'https://timor.tech/api/holiday/year';
-let holidayState = {status:'loading', holidays:[]};
-let lastValidClockIn = clockInEl.value;
-
-const savedClockIn = localStorage.getItem(CLOCK_IN_KEY);
-if (savedClockIn && /^\d{2}:\d{2}$/.test(savedClockIn)) {
-  clockInEl.value = savedClockIn;
-  clockInPickerEl.value = savedClockIn;
-  lastValidClockIn = savedClockIn;
-}
-
-function fmtTime(min) {
-  return pad(Math.floor(min / 60)) + ':' + pad(min % 60);
-}
-
-function normalizeClockInInput(value) {
-  const raw = String(value || '').trim();
-  if (!raw) return null;
-
-  const colonMatch = raw.match(/^(\d{1,2})\s*:\s*(\d{1,2})$/);
-  if (colonMatch) {
-    const h = Number(colonMatch[1]);
-    const m = Number(colonMatch[2]);
-    if (h >= 0 && h <= 23 && m >= 0 && m <= 59) return `${pad(h)}:${pad(m)}`;
-    return null;
-  }
-
-  const digits = raw.replace(/\D/g, '');
-  if (digits.length === 3) {
-    const h = Number(digits.slice(0, 1));
-    const m = Number(digits.slice(1));
-    if (h >= 0 && h <= 23 && m >= 0 && m <= 59) return `${pad(h)}:${pad(m)}`;
-    return null;
-  }
-
-  if (digits.length === 4) {
-    const h = Number(digits.slice(0, 2));
-    const m = Number(digits.slice(2));
-    if (h >= 0 && h <= 23 && m >= 0 && m <= 59) return `${pad(h)}:${pad(m)}`;
-    return null;
-  }
-
-  return null;
-}
-
-function syncClockInValue(value, {persist = true} = {}) {
-  const normalized = normalizeClockInInput(value);
-  if (!normalized) return false;
-  clockInEl.value = normalized;
-  clockInPickerEl.value = normalized;
-  lastValidClockIn = normalized;
-  if (persist) localStorage.setItem(CLOCK_IN_KEY, normalized);
-  return true;
-}
-
-function fmtCountdown(sec) {
-  sec = Math.max(0, sec);
-  const h = Math.floor(sec / 3600);
-  const m = Math.floor((sec % 3600) / 60);
-  const s = sec % 60;
-  return pad(h) + '<span class="colon-blink">:</span>' + pad(m) + '<span class="colon-blink">:</span>' + pad(s);
-}
-
-function fmtWorked(sec) {
-  sec = Math.max(0, sec);
-  const h = Math.floor(sec / 3600);
-  const m = Math.floor((sec % 3600) / 60);
-  if (h <= 0) return `已工作 ${m} 分钟`;
-  if (m <= 0) return `已工作 ${h} 小时`;
-  return `已工作 ${h} 小时 ${m} 分`;
-}
-
-function fmtDate(date) {
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-}
-
-function fmtMonthDay(date) {
-  return `${date.getMonth() + 1}月${date.getDate()}日`;
-}
-
-function startOfDay(date) {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-}
-
-function diffDays(target, now) {
-  return Math.ceil((startOfDay(target) - startOfDay(now)) / 86400000);
-}
-
-function fmtDuration(sec) {
-  sec = Math.max(0, sec);
-  const h = Math.floor(sec / 3600);
-  const m = Math.floor((sec % 3600) / 60);
-  if (h <= 0) return `${m} 分钟`;
-  if (m <= 0) return `${h} 小时`;
-  return `${h} 小时 ${m} 分`;
-}
-
-function getMealAllowanceText(workedSeconds) {
-  if (workedSeconds >= MEAL_ALLOWANCE_WORK) return '已满足 10 小时餐补';
-  return `餐补还差 ${fmtDuration(MEAL_ALLOWANCE_WORK - workedSeconds)}`;
-}
-
-function setWorkedTime(workedSeconds) {
-  workedTimeEl.innerHTML = `<span class="worked-main">${fmtWorked(workedSeconds)}</span><span class="worked-meal">${getMealAllowanceText(workedSeconds)}</span>`;
-}
-
-function setHolidayState(state) {
-  holidayState = state;
-}
-
-function getSalaryTarget(now) {
-  if (now.getDate() <= 15) {
-    return new Date(now.getFullYear(), now.getMonth(), 15);
-  }
-  return new Date(now.getFullYear(), now.getMonth() + 1, 15);
-}
-
-function updateSalaryCountdown(now) {
-  const target = getSalaryTarget(now);
-  const days = diffDays(target, now);
-  const targetText = fmtMonthDay(target);
-  salaryLabelEl.textContent = `距离发工资（${targetText}）剩余`;
-  salaryCountdownEl.textContent = days === 0 ? '今天发工资' : `${days}天`;
-  salaryDetailEl.textContent = '';
-}
-
-function updateHolidayCountdown(now) {
-  if (holidayState.status === 'loading') {
-    holidayLabelEl.textContent = '距离下个节日剩余';
-    holidayCountdownEl.textContent = '加载中...';
-    holidayDetailEl.textContent = '';
-    return;
-  }
-
-  if (holidayState.status === 'error') {
-    holidayLabelEl.textContent = '距离下个节日剩余';
-    holidayCountdownEl.textContent = '--';
-    holidayDetailEl.textContent = holidayState.message || '节假日数据获取失败';
-    return;
-  }
-
-  const today = startOfDay(now);
-  const nextHoliday = holidayState.holidays.find(item => item.start >= today);
-  if (!nextHoliday) {
-    holidayLabelEl.textContent = '距离下个节日剩余';
-    holidayCountdownEl.textContent = '--';
-    holidayDetailEl.textContent = '未找到接下来的节假日安排';
-    return;
-  }
-
-  const days = diffDays(nextHoliday.start, now);
-  if (days === 0) {
-    holidayLabelEl.textContent = '今天的节日';
-    holidayCountdownEl.textContent = nextHoliday.name;
-  } else {
-    holidayLabelEl.textContent = `距离${nextHoliday.name}（${fmtMonthDay(nextHoliday.start)}）剩余`;
-    holidayCountdownEl.textContent = `${days}天`;
-  }
-  holidayDetailEl.textContent = '';
-}
-
-function renderExtraCountdowns(now = new Date()) {
-  updateHolidayCountdown(now);
-  updateSalaryCountdown(now);
-}
-
-function readHolidayCache() {
-  try {
-    const raw = localStorage.getItem(HOLIDAY_CACHE_KEY);
-    if (!raw) return null;
-    const cache = JSON.parse(raw);
-    if (!Array.isArray(cache.holidays)) return null;
-    return {
-      status:'ready',
-      holidays: cache.holidays
-        .map(item => ({
-          name: item.name,
-          start: new Date(item.start)
-        }))
-        .filter(item => !Number.isNaN(item.start.getTime()))
-        .sort((a, b) => a.start - b.start)
-    };
-  } catch {
-    return null;
-  }
-}
-
-function saveHolidayCache(holidays) {
-  try {
-    localStorage.setItem(HOLIDAY_CACHE_KEY, JSON.stringify({
-      updatedAt: Date.now(),
-      holidays: holidays.map(item => ({
-        name: item.name,
-        start: item.start.toISOString()
-      }))
-    }));
-  } catch {}
-}
-
-function normalizeHolidayData(payloads) {
-  const map = new Map();
-  payloads.forEach(data => {
-    const holidays = data && data.holiday ? Object.values(data.holiday) : [];
-    holidays.forEach(item => {
-      if (!item || !item.date || !item.name) return;
-      if (item.holiday !== true) return;
-      const key = `${item.name}_${item.date}`;
-      if (!map.has(key)) {
-        map.set(key, {
-          name: item.name,
-          start: new Date(`${item.date}T00:00:00`)
-        });
-      }
-    });
-  });
-
-  return [...map.values()]
-    .filter(item => !Number.isNaN(item.start.getTime()))
-    .sort((a, b) => a.start - b.start);
-}
-
-async function fetchHolidayYear(year) {
-  const res = await fetch(`${HOLIDAY_API_BASE}/${year}/`, {cache:'no-store'});
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  if (data.code !== 0 && data.code !== undefined) {
-    throw new Error('holiday api error');
-  }
-  return data;
-}
-
-async function loadHolidayData() {
-  const cached = readHolidayCache();
-  if (cached && cached.holidays.length) {
-    setHolidayState(cached);
-    renderExtraCountdowns();
-  }
-
-  const year = new Date().getFullYear();
-  try {
-    const results = await Promise.all([fetchHolidayYear(year), fetchHolidayYear(year + 1)]);
-    const holidays = normalizeHolidayData(results);
-    if (!holidays.length) throw new Error('empty holidays');
-    saveHolidayCache(holidays);
-    setHolidayState({status:'ready', holidays});
-  } catch (err) {
-    if (!cached || !cached.holidays.length) {
-      setHolidayState({status:'error', holidays:[], message:'节假日数据获取失败'});
+async function loadHolidays(){
+  const cacheKey='gohome-holidays-v2';
+  try{
+    const cached=JSON.parse(localStorage.getItem(cacheKey)||'null');
+    if(cached&&Array.isArray(cached.items)&&Date.now()-cached.time<7*DAY){
+      holidays=cached.items.map(x=>({name:x.name,date:localDate(x.date)})).filter(x=>x.date);
+      updateHoliday(new Date());
     }
-  }
-
-  renderExtraCountdowns();
-}
-
-function getEndMin(sh, sm) {
-  return getTargetEndMin(sh, sm, 480);
-}
-
-function getTargetEndMin(sh, sm, targetWorkMin) {
-  const start  = sh * 60 + sm;
-  const lunchS = 11 * 60 + 45;
-  const lunchE = 13 * 60;
-  if (start < lunchS) {
-    const morning = lunchS - start;
-    if (morning >= targetWorkMin) return start + targetWorkMin;
-    return lunchE + (targetWorkMin - morning);
-  }
-  if (start < lunchE) return lunchE + targetWorkMin;
-  return start + targetWorkMin;
-}
-
-function workedSec(nowS, startS) {
-  if (nowS <= startS) return 0;
-  if (startS < LUNCH_S) {
-    if (nowS <= LUNCH_S) return nowS - startS;
-    if (nowS <= LUNCH_E) return LUNCH_S - startS;
-    return (LUNCH_S - startS) + (nowS - LUNCH_E);
-  }
-  if (startS < LUNCH_E) {
-    return nowS <= LUNCH_E ? 0 : nowS - LUNCH_E;
-  }
-  return nowS - startS;
-}
-
-function tick() {
-  const now = new Date();
-  const nowS = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-  const val  = clockInEl.value;
-  if (!val) return;
-  const [sh, sm] = val.split(':').map(Number);
-  const startS = sh * 3600 + sm * 60;
-
-  const endMin = getEndMin(sh, sm);
-  const endS   = endMin * 60;
-  const endStr = fmtTime(endMin);
-  const mealAllowanceEndMin = getTargetEndMin(sh, sm, MEAL_ALLOWANCE_WORK / 60);
-  const mealAllowanceEndStr = fmtTime(mealAllowanceEndMin);
-  clockOutEl.textContent = endStr;
-  mealAllowanceTimeEl.textContent = `预计餐补下班时间：${mealAllowanceEndStr}`;
-
-  const day = now.getDay();
-  const isWeekend = day === 0 || day === 6;
-  document.body.classList.toggle('weekend', isWeekend);
-
-  const w    = workedSec(nowS, startS);
-  const pct  = Math.min(1, w / WORK);
-  ringEl.style.strokeDashoffset = C * (1 - pct);
-
-  const remain = endS - nowS;
-  if (nowS < startS) {
-    countdownChipEl.textContent = isWeekend ? '周末 · 距离上班' : '距离上班';
-    countdownEl.innerHTML = fmtCountdown(startS - nowS);
-    ringLabelEl.textContent = `预计 ${endStr} 下班`;
-    workedTimeEl.textContent = isWeekend ? '周末也按工作时长规则预估' : '今天还没有开始计时';
-    statusEl.textContent = isWeekend ? '当前是周末，仍按工作日规则显示' : '还没到上班时间';
-  } else if (remain > 0) {
-    countdownChipEl.textContent = isWeekend ? '周末 · 预计下班剩余' : '预计下班剩余';
-    countdownEl.innerHTML = fmtCountdown(remain);
-    ringLabelEl.textContent = `预计 ${endStr} 下班`;
-    setWorkedTime(w);
-    if (nowS >= LUNCH_S && nowS < LUNCH_E) {
-      statusEl.textContent = isWeekend ? '周末午休中，按规则继续计时展示' : '午休中，好好休息';
-    } else if (remain <= 1800) {
-      statusEl.textContent = '马上就下班了，再坚持一下';
-    } else {
-      statusEl.textContent = isWeekend ? '当前是周末，倒计时按工作日规则演示' : '专注工作中';
+    const year=new Date().getFullYear();
+    const payloads=await Promise.all([year,year+1].map(y=>fetch(`https://timor.tech/api/holiday/year/${y}/`).then(r=>{if(!r.ok)throw Error(r.status);return r.json()})));
+    const items=[];
+    payloads.forEach(p=>Object.values(p.holiday||{}).forEach(x=>{if(x&&x.holiday===true&&x.date&&x.name)items.push({name:x.name,date:x.date})}));
+    if(items.length){
+      const unique=[...new Map(items.map(x=>[`${x.name}-${x.date}`,x])).values()];
+      holidays=unique.map(x=>({name:x.name,date:localDate(x.date)})).filter(x=>x.date).sort((a,b)=>a.date-b.date);
+      localStorage.setItem(cacheKey,JSON.stringify({time:Date.now(),items:unique}));
+      updateHoliday(new Date());
     }
-  } else {
-    countdownChipEl.textContent = isWeekend ? '周末 · 今日已完成' : '今日已完成';
-    countdownEl.innerHTML = '00<span class="colon-blink">:</span>00<span class="colon-blink">:</span>00';
-    ringLabelEl.textContent = `预计 ${endStr} 下班`;
-    setWorkedTime(w);
-    statusEl.textContent = isWeekend ? '周末模式下已超过预计工时，继续累计工作时长' : '已到下班时间，当前仍继续累计工作时长';
-  }
-
-  const wd = ['日','一','二','三','四','五','六'];
-  dateEl.textContent = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日  星期' + wd[day];
-  renderExtraCountdowns(now);
+  }catch(e){updateHoliday(new Date())}
 }
-
-clockInEl.addEventListener('input', () => {
-  const normalized = normalizeClockInInput(clockInEl.value);
-  if (!normalized) return;
-  clockInPickerEl.value = normalized;
-  lastValidClockIn = normalized;
-  localStorage.setItem(CLOCK_IN_KEY, normalized);
-  tick();
-});
-
-clockInEl.addEventListener('blur', () => {
-  if (syncClockInValue(clockInEl.value)) {
-    tick();
-    return;
-  }
-  clockInEl.value = lastValidClockIn;
-  clockInPickerEl.value = lastValidClockIn;
-});
-
-clockInEl.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  if (syncClockInValue(clockInEl.value)) {
-    tick();
-    clockInEl.blur();
-  }
-});
-
-clockInPickerEl.addEventListener('input', () => {
-  if (syncClockInValue(clockInPickerEl.value)) tick();
-});
-
-clockInPickerBtnEl.addEventListener('click', () => {
-  if (typeof clockInPickerEl.showPicker === 'function') {
-    clockInPickerEl.showPicker();
-    return;
-  }
-  clockInPickerEl.focus();
-  clockInPickerEl.click();
-});
-loadHolidayData();
-setInterval(tick, 1000);
-tick();
-updateClock();
-setInterval(updateClock, 1000);
+function update(){
+  const now=new Date(),week=['日','一','二','三','四','五','六'];
+  $('date').textContent=`${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 星期${week[now.getDay()]}`;
+  $('clock').textContent=`${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  const [h,m]=clockIn.value.split(':').map(Number),endMin=workEnd(h,m),endH=Math.floor(endMin/60)%24,endM=endMin%60;
+  const mealMin=workEndTarget(h,m,600),mealH=Math.floor(mealMin/60)%24,mealM=mealMin%60;
+  $('clockOut').textContent=`${pad(endH)}:${pad(endM)}`;
+  const nowS=now.getHours()*3600+now.getMinutes()*60+now.getSeconds(),startS=(h*60+m)*60,endS=endMin*60;
+  let worked=Math.max(0,nowS-startS);if(nowS>13*3600&&startS<11*3600+45*60)worked-=75*60;else if(nowS>11*3600+45*60&&startS<11*3600+45*60)worked-=nowS-(11*3600+45*60);
+  worked=Math.max(0,worked);
+  if(nowS<startS){$('chip').textContent='距离上班';$('countdown').textContent=fmtSec(startS-nowS);$('status').textContent='还没到上班时间'}
+  else if(nowS<endS){$('chip').textContent='预计下班剩余';$('countdown').textContent=fmtSec(endS-nowS);$('status').textContent=nowS>=11*3600+45*60&&nowS<13*3600?'午休中，好好休息':'专注工作中'}
+  else{$('chip').textContent='今日工作完成';$('countdown').textContent='00:00:00';$('status').textContent='到点了，今天辛苦了'}
+  const mealLeft=Math.max(0,10*3600-worked);
+  const workedText=`${Math.floor(worked/3600)}时${Math.floor(worked%3600/60)}分`;
+  const mealText=mealLeft>0
+    ? `<span>餐补 ${pad(mealH)}:${pad(mealM)}</span><span>还差 ${Math.floor(mealLeft/3600)}时${Math.floor(mealLeft%3600/60)}分</span>`
+    : '<span>已满足 10 小时餐补</span>';
+  $('workDetail').innerHTML=`<span>预计 ${pad(endH)}:${pad(endM)} 下班</span><span>已工作 ${workedText}</span>${mealText}`;
+  $('hero').style.setProperty('--progress',`${Math.min(100,worked/(8*3600)*100)}%`);
+  updateHoliday(now);
+  let pay=new Date(now.getFullYear(),now.getMonth(),15);if(startDay(pay)<startDay(now))pay=new Date(now.getFullYear(),now.getMonth()+1,15);
+  const pd=Math.round((startDay(pay)-startDay(now))/DAY);$('payday').textContent=pd===0?'今天':`${pd} 天`;
+  updateIncome(now,worked);
+}
+[clockIn,hireDate,salary].forEach(el=>el.addEventListener('input',()=>{persist();update()}));
+loadHolidays();update();setInterval(update,1000);
 </script>
 </body>
 </html>

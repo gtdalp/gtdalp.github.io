@@ -186,11 +186,11 @@ input[type=time]{font-size:2rem;text-align:center}
   .chip{background:#ffffff05;border-color:#ffffff12;color:#aaa098}
   .countdown{
     width:100%;
-    max-width:100%;
-    overflow:hidden;
-    font-size:clamp(30px,8.5vw,38px);
+    max-width:calc(100% - 18px);
+    overflow:visible;
+    font-size:clamp(28px,7.2vw,32px);
     font-variant-numeric:tabular-nums;
-    letter-spacing:-.06em;
+    letter-spacing:-.08em;
     line-height:1.08;
     text-align:center;
     white-space:nowrap;
@@ -225,25 +225,29 @@ input[type=time]{font-size:2rem;text-align:center}
     width:100%;
     min-height:38px;
     border:0;
-    padding:3px 28px 3px 3px;
+    padding:3px 0;
     background:transparent;
     color:#f8f3ec;
     box-shadow:none;
-    font-size:24px;
+    font-size:26px;
     line-height:38px;
-    text-align:left;
+    text-align:center;
+    -webkit-appearance:none;
+    appearance:none;
   }
   input[type=time]::-webkit-date-and-time-value{
     min-height:38px;
     line-height:38px;
-    text-align:left;
+    text-align:center;
   }
   input[type=time]::-webkit-calendar-picker-indicator{
     position:absolute;
-    right:2px;
-    width:20px;
-    height:20px;
+    inset:0;
+    width:100%;
+    height:100%;
     margin:0;
+    opacity:0;
+    cursor:pointer;
   }
   .pay-day-input{width:100%;height:38px}
   .pay-day-input input{
@@ -320,17 +324,19 @@ input[type=time]{font-size:2rem;text-align:center}
     border-color:#ffffff11;
     background:#ffffff08;
   }
-  .profile-panel{padding:6px 12px 9px}
-  .input-pair{grid-template-columns:1fr;gap:0}
+  .profile-panel{padding:9px 12px}
+  .input-pair{grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:9px}
   .input-pair label{
-    display:grid;
-    grid-template-columns:104px minmax(0,1fr);
-    align-items:center;
-    gap:8px;
-    min-height:48px;
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    justify-content:flex-start;
+    gap:6px;
+    min-width:0;
+    min-height:0;
   }
-  .input-pair label+label{border-top:1px solid #ffffff0c}
-  .input-pair .label{margin:0;text-align:left}
+  .input-pair label+label{border-top:0}
+  .input-pair .label{margin:0;text-align:left;font-size:15px}
   .input-pair .label{white-space:nowrap}
   .profile-panel input:not([type=time]){
     min-width:0;
@@ -338,7 +344,7 @@ input[type=time]{font-size:2rem;text-align:center}
     padding:6px 9px;
     border:0;
     background:#ffffff06;
-    text-align:right;
+    text-align:left;
   }
   .date-selects{width:100%;grid-template-columns:1.25fr .75fr .75fr;gap:4px}
   .date-selects select{
@@ -347,11 +353,14 @@ input[type=time]{font-size:2rem;text-align:center}
     border:0;
     border-radius:8px;
     background:#ffffff06;
-    padding:5px 3px;
+    padding:5px 2px;
     color:#f5efe6;
-    font-size:14px;
+    font-size:16px;
     text-align:center;
     text-align-last:center;
+    -webkit-appearance:none;
+    appearance:none;
+    background-image:none;
   }
   .metric-row{
     margin-top:5px;
@@ -419,8 +428,7 @@ input[type=time]{font-size:2rem;text-align:center}
   .work-row{padding:7px 9px}
   .panel{padding:7px 9px}
   .panel.full .hint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .input-pair{grid-template-columns:1fr;gap:0}
-  .input-pair label{grid-template-columns:98px minmax(0,1fr)}
+  .input-pair{grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:6px}
   .earnings-panel .income-live:nth-child(1),
   .earnings-panel .income-live:nth-child(3){flex-direction:column;align-items:flex-start}
   .schedule-row{gap:5px}

@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>下班倒计时</title>
+<title>码仔的一天</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 :root{--bg:#141210;--card:#201d1a;--text:#f5efe6;--muted:#8b817a;--accent:#e89a2f;--accent2:#d2663c;--line:rgba(255,255,255,.1)}
 body{min-height:100vh;background:radial-gradient(circle at 50% 5%,#211b17 0,#141210 36%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;padding:26px 16px}
 .container{width:min(760px,100%);margin:auto;text-align:center}
@@ -20,7 +21,14 @@ body{min-height:100vh;background:radial-gradient(circle at 50% 5%,#211b17 0,#141
 .chip{color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:7px 15px}
 .countdown{font-size:clamp(2.7rem,10vw,4.25rem);font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.04em}
 .sub{color:var(--muted);line-height:1.55}
-.work-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:end;margin-bottom:18px}
+.work-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:end;margin-bottom:18px}
+.work-meta{grid-column:1/-1;color:var(--muted);font-size:.9rem;margin:-8px 0 0}
+.pay-day-input{display:flex;align-items:center;justify-content:center;gap:3px}
+.pay-day-input input{width:70px;text-align:right}
+.pay-day-input i{color:var(--muted);font-style:normal}
+.schedule-row{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.schedule-item{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted)}
+.schedule-item b{color:var(--accent);white-space:nowrap}
 .label{display:block;color:var(--muted);margin-bottom:9px}
 input{width:100%;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.055);color:var(--text);padding:13px 14px;font:inherit;font-size:1.15rem;outline:none}
 input:focus{border-color:#e89a2f88;box-shadow:0 0 0 4px #e89a2f12}
@@ -180,24 +188,100 @@ input[type=time]{font-size:2rem;text-align:center}
     grid-column:1/-1;
     margin:0;
     padding:9px 12px;
-    gap:12px;
+    column-gap:12px;
+    row-gap:6px;
     align-items:center;
     border:1px solid #ffffff10;
     border-radius:16px;
     background:linear-gradient(145deg,#ffffff0a,#ffffff04);
   }
-  .work-row>label,.work-row>div{flex:1}
-  .work-row>div{border-left:1px solid #ffffff0d}
+  .work-row>label,.work-row>div{min-width:0}
+  .work-row>div,.work-row>.pay-day-field{border-left:1px solid #ffffff0d}
+  .work-row>label,
+  .work-row>div:not(.work-meta):not(.schedule-row){
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  }
   .work-row .label{color:#938981}
   input[type=time]{
+    position:relative;
+    width:100%;
     min-height:38px;
     border:0;
-    padding:3px 8px;
+    padding:3px 28px 3px 3px;
     background:transparent;
     color:#f8f3ec;
     box-shadow:none;
+    font-size:24px;
+    line-height:38px;
+    text-align:left;
   }
-  .result{line-height:38px;padding:0;color:#f0a12f}
+  input[type=time]::-webkit-date-and-time-value{
+    min-height:38px;
+    line-height:38px;
+    text-align:left;
+  }
+  input[type=time]::-webkit-calendar-picker-indicator{
+    position:absolute;
+    right:2px;
+    width:20px;
+    height:20px;
+    margin:0;
+  }
+  .pay-day-input{width:100%;height:38px}
+  .pay-day-input input{
+    width:42px;
+    min-height:34px;
+    padding:2px 0;
+    border:0;
+    background:transparent;
+    box-shadow:none;
+    color:#f0a12f;
+    font-size:26px;
+    font-weight:700;
+    text-align:right;
+    -moz-appearance:textfield;
+  }
+  .pay-day-input input::-webkit-inner-spin-button,
+  .pay-day-input input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  .pay-day-input i{font-size:16px;line-height:38px;color:#938981}
+  .result{height:38px;line-height:38px;padding:0;color:#f0a12f;font-size:26px}
+  .work-meta{
+    grid-column:1/-1;
+    margin:1px 0 -1px;
+    padding:6px 4px 1px;
+    border-left:0!important;
+    border-top:1px solid #ffffff0c;
+    border-radius:0;
+    background:transparent;
+    color:#999088;
+    font-size:14px;
+    line-height:1.35;
+    text-align:center;
+  }
+  .schedule-row{
+    border-left:0!important;
+    border-top:1px solid #ffffff0c;
+    padding-top:7px;
+    gap:7px;
+  }
+  .schedule-item{
+    min-width:0;
+    padding:7px 9px;
+    border-radius:10px;
+    background:#ffffff05;
+    font-size:14px;
+  }
+  .schedule-item span{
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .schedule-item b{font-size:16px}
   .status{
     display:none;
   }
@@ -226,13 +310,14 @@ input[type=time]{font-size:2rem;text-align:center}
   .input-pair{grid-template-columns:1fr;gap:0}
   .input-pair label{
     display:grid;
-    grid-template-columns:92px minmax(0,1fr);
+    grid-template-columns:104px minmax(0,1fr);
     align-items:center;
     gap:8px;
     min-height:48px;
   }
   .input-pair label+label{border-top:1px solid #ffffff0c}
   .input-pair .label{margin:0;text-align:left}
+  .input-pair .label{white-space:nowrap}
   .profile-panel input:not([type=time]){
     min-width:0;
     min-height:36px;
@@ -308,9 +393,11 @@ input[type=time]{font-size:2rem;text-align:center}
   .panel{padding:7px 9px}
   .panel.full .hint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .input-pair{grid-template-columns:1fr;gap:0}
-  .input-pair label{grid-template-columns:84px minmax(0,1fr)}
+  .input-pair label{grid-template-columns:98px minmax(0,1fr)}
   .earnings-panel .income-live:nth-child(1),
   .earnings-panel .income-live:nth-child(3){flex-direction:column;align-items:flex-start}
+  .schedule-row{gap:5px}
+  .schedule-item{padding:6px}
   .comp-line .label{max-width:42%}
   .comp-line .money-live{font-size:20px}
 }
@@ -344,6 +431,12 @@ input[type=time]{font-size:2rem;text-align:center}
   <div class="work-row">
     <label><span class="label">上班打卡</span><input id="clockIn" type="time" value="08:30"></label>
     <div><span class="label">预计下班</span><div class="result" id="clockOut">17:45</div></div>
+    <label class="pay-day-field"><span class="label">发薪日</span><span class="pay-day-input"><input id="payDay" type="number" min="1" max="31" value="15" inputmode="numeric"><i>日</i></span></label>
+    <div class="work-meta" id="workMeta"></div>
+    <div class="schedule-row">
+      <div class="schedule-item"><span id="holidayLabel">距离下个节假日</span><b id="holidayCountdown">--</b></div>
+      <div class="schedule-item"><span id="paydayLabel">距离发薪日</span><b id="payday">--</b></div>
+    </div>
   </div>
   <div class="status" id="status">专注工作中</div>
 
@@ -366,23 +459,16 @@ input[type=time]{font-size:2rem;text-align:center}
         <div class="income-live"><span>今日已累计</span><b id="todayEarned">¥0.00</b></div>
         <div class="income-live"><span>本月已累计</span><b id="monthEarned">¥0.00</b></div>
       </div>
-      <div class="hint" id="salaryRates">按月计薪天数 21.75 天、每天 8 小时估算</div>
       <div class="comp-line">
-        <span class="label">N+1 经济补偿估算</span>
+        <span class="label">N+1 补偿</span>
         <div class="money-live" id="compensation">¥0.00</div>
       </div>
-      <div class="hint" id="compFormula">填写入职日期和月薪后自动计算</div>
-      <div class="footnote">估算口径：N 按每满 1 年计 1 个月；超过 6 个月按 1 年计，不满 6 个月按 0.5 个月计，再加 1 个月代通知金。实际是否适用 N+1、工资基数、12 年上限及当地社平工资封顶规则，应以解除原因、劳动合同和当地法规为准。</div>
     </section>
-  </div>
-  <div class="extra">
-    <section class="panel"><span class="hint" id="holidayLabel">距离下个节假日</span><b id="holidayCountdown">--</b></section>
-    <section class="panel"><span class="hint">距离发工资（15日）</span><b id="payday">--</b></section>
   </div>
 </main>
 <script>
 const $=id=>document.getElementById(id), DAY=86400000;
-const clockIn=$('clockIn'), hireDate=$('hireDate'), salary=$('salary');
+const clockIn=$('clockIn'), hireDate=$('hireDate'), salary=$('salary'), payDay=$('payDay');
 const pad=n=>String(n).padStart(2,'0');
 const money=n=>new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY',minimumFractionDigits:2}).format(n||0);
 const money4=n=>new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY',minimumFractionDigits:4,maximumFractionDigits:4}).format(n||0);
@@ -390,7 +476,8 @@ const saved=JSON.parse(localStorage.getItem('gohome-settings')||'{}');
 if(saved.clockIn) clockIn.value=saved.clockIn;
 if(saved.hireDate) hireDate.value=saved.hireDate;
 if(saved.salary) salary.value=saved.salary;
-function persist(){localStorage.setItem('gohome-settings',JSON.stringify({clockIn:clockIn.value,hireDate:hireDate.value,salary:salary.value}))}
+if(saved.payDay&&saved.payDay>=1&&saved.payDay<=31)payDay.value=saved.payDay;
+function persist(){localStorage.setItem('gohome-settings',JSON.stringify({clockIn:clockIn.value,hireDate:hireDate.value,salary:salary.value,payDay:payDay.value}))}
 function localDate(v){if(!v)return null;const [y,m,d]=v.split('-').map(Number);return new Date(y,m-1,d)}
 function startDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
 function daysBetween(a,b){return Math.max(0,Math.floor((startDay(b)-startDay(a))/DAY)+1)}
@@ -405,6 +492,10 @@ function compN(start,now){
 }
 function workEndTarget(h,m,work){const start=h*60+m,lunchStart=11*60+45,lunchEnd=13*60;if(start<lunchStart){const morning=lunchStart-start;return morning>=work?start+work:lunchEnd+work-morning}return (start<lunchEnd?lunchEnd:start)+work}
 function workEnd(h,m){return workEndTarget(h,m,480)}
+function paydayDate(year,month,day){
+  const lastDay=new Date(year,month+1,0).getDate();
+  return new Date(year,month,Math.min(Math.max(1,day),lastDay));
+}
 function fmtSec(sec){sec=Math.max(0,Math.floor(sec));return `${pad(Math.floor(sec/3600))}:${pad(Math.floor(sec%3600/60))}:${pad(sec%60)}`}
 function updateIncome(now,workedSeconds=0){
   const monthly=Math.max(0,Number(salary.value)||0);
@@ -418,14 +509,12 @@ function updateIncome(now,workedSeconds=0){
   $('perSecond').textContent=money4(perSec);
   $('todayEarned').textContent=money(perSec*workedSeconds);
   $('monthEarned').textContent=money(monthAccrued);
-  $('salaryRates').textContent=`今日已计薪 ${Math.floor(workedSeconds/3600)} 小时 ${Math.floor(workedSeconds%3600/60)} 分 · 每小时 ${money(hourly)}`;
   const start=localDate(hireDate.value);
-  if(!start){$('tenureDays').textContent='--';$('compYears').textContent='--';$('nPlusOneMonths').textContent='--';$('compensation').textContent=money(0);$('compFormula').textContent='填写入职日期和月薪后自动计算';return}
-  if(start>now){$('tenureDays').textContent='日期有误';$('compYears').textContent='--';$('nPlusOneMonths').textContent='--';$('compensation').textContent=money(0);$('compFormula').textContent='入职日期不能晚于今天';return}
+  if(!start){$('tenureDays').textContent='--';$('compYears').textContent='--';$('nPlusOneMonths').textContent='--';$('compensation').textContent=money(0);return}
+  if(start>now){$('tenureDays').textContent='日期有误';$('compYears').textContent='--';$('nPlusOneMonths').textContent='--';$('compensation').textContent=money(0);return}
   const days=daysBetween(start,now),n=compN(start,now),months=n+1;
   $('tenureDays').textContent=`${days} 天`;$('compYears').textContent=`${n} 个月`;$('nPlusOneMonths').textContent=`${months} 个月`;
   $('compensation').textContent=money(monthly*months);
-  $('compFormula').textContent=`${money(monthly)} × (${n} + 1) 个月 = ${money(monthly*months)}`;
 }
 let holidays=[
   {name:'中秋节',date:new Date(2026,8,25)},
@@ -476,16 +565,24 @@ function update(){
   const mealLeft=Math.max(0,10*3600-worked);
   const workedText=`${Math.floor(worked/3600)}时${Math.floor(worked%3600/60)}分`;
   const mealText=mealLeft>0
-    ? `<span>餐补 ${pad(mealH)}:${pad(mealM)}</span><span>还差 ${Math.floor(mealLeft/3600)}时${Math.floor(mealLeft%3600/60)}分</span>`
-    : '<span>已满足 10 小时餐补</span>';
-  $('workDetail').innerHTML=`<span>预计 ${pad(endH)}:${pad(endM)} 下班</span><span>已工作 ${workedText}</span>${mealText}`;
+    ? `餐补 ${pad(mealH)}:${pad(mealM)} · 还差 ${Math.floor(mealLeft/3600)}时${Math.floor(mealLeft%3600/60)}分`
+    : '已满足 10 小时餐补';
+  $('workDetail').innerHTML=`<span>${pad(endH)}:${pad(endM)} 下班</span>`;
+  $('workMeta').textContent=`已工作 ${workedText} · ${mealText}`;
   $('hero').style.setProperty('--progress',`${Math.min(100,worked/(8*3600)*100)}%`);
   updateHoliday(now);
-  let pay=new Date(now.getFullYear(),now.getMonth(),15);if(startDay(pay)<startDay(now))pay=new Date(now.getFullYear(),now.getMonth()+1,15);
+  const configuredPayDay=Math.min(31,Math.max(1,Number(payDay.value)||15));
+  let pay=paydayDate(now.getFullYear(),now.getMonth(),configuredPayDay);
+  if(startDay(pay)<startDay(now))pay=paydayDate(now.getFullYear(),now.getMonth()+1,configuredPayDay);
   const pd=Math.round((startDay(pay)-startDay(now))/DAY);$('payday').textContent=pd===0?'今天':`${pd} 天`;
+  $('paydayLabel').textContent=`距离发薪（${configuredPayDay}日）`;
   updateIncome(now,worked);
 }
-[clockIn,hireDate,salary].forEach(el=>el.addEventListener('input',()=>{persist();update()}));
+[clockIn,hireDate,salary,payDay].forEach(el=>el.addEventListener('input',()=>{persist();update()}));
+payDay.addEventListener('blur',()=>{
+  payDay.value=String(Math.min(31,Math.max(1,Number(payDay.value)||15)));
+  persist();update();
+});
 loadHolidays();update();setInterval(update,1000);
 </script>
 </body>

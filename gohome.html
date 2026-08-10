@@ -51,6 +51,9 @@ input[type=time]{font-size:2rem;text-align:center}
 .income-live span{display:block;color:var(--muted);font-size:.82rem}
 .income-live b{display:block;color:var(--accent);font-size:1.45rem;margin-top:4px;font-variant-numeric:tabular-nums}
 .input-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.date-selects{display:grid;grid-template-columns:1.25fr .8fr .8fr;gap:6px}
+.date-selects select{min-width:0;border:1px solid var(--line);border-radius:10px;background:#292522;color:var(--text);padding:8px 5px;font:inherit;outline:none}
+.date-selects option{background:#fff;color:#201c19}
 .profile-panel{grid-column:1/-1}
 .earnings-panel{grid-column:1/-1}
 .earnings-panel .income-live-grid{grid-template-columns:repeat(3,1fr)}
@@ -181,7 +184,18 @@ input[type=time]{font-size:2rem;text-align:center}
   .hero:after{background:radial-gradient(circle at 50% 38%,#211c18,#141210 72%)}
   .hero-inner{gap:clamp(4px,.55svh,7px)}
   .chip{background:#ffffff05;border-color:#ffffff12;color:#aaa098}
-  .countdown{font-size:clamp(34px,10vw,44px);text-shadow:0 2px 18px #0008}
+  .countdown{
+    width:100%;
+    max-width:100%;
+    overflow:hidden;
+    font-size:clamp(30px,8.5vw,38px);
+    font-variant-numeric:tabular-nums;
+    letter-spacing:-.06em;
+    line-height:1.08;
+    text-align:center;
+    white-space:nowrap;
+    text-shadow:0 2px 18px #0008;
+  }
   .sub{width:100%;font-size:14px;color:#9e948c;line-height:1.28}
   .sub span{display:block;white-space:nowrap}
   .work-row{
@@ -326,6 +340,19 @@ input[type=time]{font-size:2rem;text-align:center}
     background:#ffffff06;
     text-align:right;
   }
+  .date-selects{width:100%;grid-template-columns:1.25fr .75fr .75fr;gap:4px}
+  .date-selects select{
+    width:100%;
+    min-height:36px;
+    border:0;
+    border-radius:8px;
+    background:#ffffff06;
+    padding:5px 3px;
+    color:#f5efe6;
+    font-size:14px;
+    text-align:center;
+    text-align-last:center;
+  }
   .metric-row{
     margin-top:5px;
     padding-top:6px;
@@ -406,7 +433,7 @@ input[type=time]{font-size:2rem;text-align:center}
   .container{align-content:start;row-gap:4px;padding-top:8px;padding-bottom:8px}
   .hero{width:min(50vw,170px);height:min(50vw,170px)}
   .hero-inner{padding:13px}
-  .countdown{font-size:34px}
+  .countdown{font-size:30px}
   .work-row{padding-top:6px;padding-bottom:6px}
   .status{padding-top:2px;padding-bottom:2px}
   .section-title{font-size:18px}
@@ -444,7 +471,7 @@ input[type=time]{font-size:2rem;text-align:center}
   <div class="grid">
     <section class="panel profile-panel">
       <div class="input-pair">
-        <label><span class="label">入职日期</span><input id="hireDate" type="date"></label>
+        <label><span class="label">入职日期</span><span class="date-selects"><select id="hireYear" aria-label="入职年份"><option value="">年份</option></select><select id="hireMonth" aria-label="入职月份"><option value="">月</option></select><select id="hireDay" aria-label="入职日期"><option value="">日</option></select></span><input id="hireDate" type="hidden"></label>
         <label><span class="label">税前月薪（元）</span><input id="salary" type="number" min="0" step="100" placeholder="例如 10000" inputmode="decimal"></label>
       </div>
       <div class="metric-row">
@@ -469,6 +496,7 @@ input[type=time]{font-size:2rem;text-align:center}
 <script>
 const $=id=>document.getElementById(id), DAY=86400000;
 const clockIn=$('clockIn'), hireDate=$('hireDate'), salary=$('salary'), payDay=$('payDay');
+const hireYear=$('hireYear'),hireMonth=$('hireMonth'),hireDay=$('hireDay');
 const pad=n=>String(n).padStart(2,'0');
 const money=n=>new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY',minimumFractionDigits:2}).format(n||0);
 const money4=n=>new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY',minimumFractionDigits:4,maximumFractionDigits:4}).format(n||0);
@@ -479,6 +507,34 @@ if(saved.salary) salary.value=saved.salary;
 if(saved.payDay&&saved.payDay>=1&&saved.payDay<=31)payDay.value=saved.payDay;
 function persist(){localStorage.setItem('gohome-settings',JSON.stringify({clockIn:clockIn.value,hireDate:hireDate.value,salary:salary.value,payDay:payDay.value}))}
 function localDate(v){if(!v)return null;const [y,m,d]=v.split('-').map(Number);return new Date(y,m-1,d)}
+function fillSelect(select,placeholder,values,suffix){
+  select.innerHTML=`<option value="">${placeholder}</option>`+values.map(v=>`<option value="${v}">${v}${suffix}</option>`).join('');
+}
+function refreshHireDays(){
+  const previous=Number(hireDay.value)||1;
+  const year=Number(hireYear.value)||new Date().getFullYear();
+  const month=Number(hireMonth.value)||1;
+  const total=new Date(year,month,0).getDate();
+  fillSelect(hireDay,'日',Array.from({length:total},(_,i)=>i+1),'日');
+  if(hireYear.value&&hireMonth.value)hireDay.value=String(Math.min(previous,total));
+}
+function initHireDateSelectors(){
+  const currentYear=new Date().getFullYear();
+  fillSelect(hireYear,'年份',Array.from({length:currentYear-1949},(_,i)=>currentYear-i),'年');
+  fillSelect(hireMonth,'月',Array.from({length:12},(_,i)=>i+1),'月');
+  if(hireDate.value){
+    const [year,month,day]=hireDate.value.split('-').map(Number);
+    hireYear.value=String(year);hireMonth.value=String(month);
+    refreshHireDays();hireDay.value=String(day);
+  }else refreshHireDays();
+}
+function commitHireDate(){
+  if(hireYear.value&&hireMonth.value&&hireDay.value){
+    hireDate.value=`${hireYear.value}-${pad(hireMonth.value)}-${pad(hireDay.value)}`;
+  }else hireDate.value='';
+  persist();update();
+}
+initHireDateSelectors();
 function startDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
 function daysBetween(a,b){return Math.max(0,Math.floor((startDay(b)-startDay(a))/DAY)+1)}
 function compN(start,now){
@@ -578,7 +634,9 @@ function update(){
   $('paydayLabel').textContent=`距离发薪（${configuredPayDay}日）`;
   updateIncome(now,worked);
 }
-[clockIn,hireDate,salary,payDay].forEach(el=>el.addEventListener('input',()=>{persist();update()}));
+[clockIn,salary,payDay].forEach(el=>el.addEventListener('input',()=>{persist();update()}));
+[hireYear,hireMonth].forEach(el=>el.addEventListener('change',()=>{refreshHireDays();commitHireDate()}));
+hireDay.addEventListener('change',commitHireDate);
 payDay.addEventListener('blur',()=>{
   payDay.value=String(Math.min(31,Math.max(1,Number(payDay.value)||15)));
   persist();update();

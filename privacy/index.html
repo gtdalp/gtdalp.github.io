@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SimNewTab Privacy Policy</title>
+<style>
+  :root {
+    --bg: #f7f7f9; --card: #ffffff; --text: #24292f; --muted: #57606a;
+    --accent: #0969da; --border: #d8dee4; --code-bg: #f0f2f5;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    line-height: 1.7; font-size: 16px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { text-align: right; margin-bottom: 8px; font-size: 14px; }
+  .lang-switch a { color: var(--accent); text-decoration: none; margin-left: 12px; }
+  .lang-switch a.active { font-weight: 600; color: var(--text); cursor: default; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 40px 48px;
+  }
+  h1 { font-size: 28px; margin: 0 0 4px; }
+  .updated { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+  h2 { font-size: 20px; margin-top: 36px; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  p, li { color: var(--text); }
+  ul { padding-left: 24px; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14.5px; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--code-bg); }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    background: var(--code-bg); border-radius: 4px; padding: 1px 6px; font-size: 0.9em;
+  }
+  .highlight { background: #eef6ff; border-left: 4px solid var(--accent); padding: 12px 16px; border-radius: 0 8px 8px 0; }
+  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 32px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lang-switch">
+    <a href="#" class="active" data-lang="en">English</a>
+    <a href="#" data-lang="zh">简体中文</a>
+  </div>
+
+  <!-- ============ ENGLISH ============ -->
+  <div id="page-en" class="card">
+    <h1>SimNewTab Privacy Policy</h1>
+    <p class="updated">Last updated: September 26, 2026</p>
+    <p>SimNewTab ("this extension") is a browser new tab page extension. We take your privacy seriously. This policy explains how the extension handles data.</p>
+
+    <h2>Overview</h2>
+    <div class="highlight"><p><strong>This extension has no accounts, no servers of its own, no analytics, no ads, and no tracking code.</strong></p>
+    <p>All of your personalization is stored only in your own browser's local storage (<code>chrome.storage.local</code>) and is never uploaded to our servers. While running, the extension makes requests to the public third-party services listed below only to provide the corresponding features, and never sends any information that could identify you personally.</p></div>
+
+    <h2>Data Stored Locally</h2>
+    <p>The following data stays on your device (unless you explicitly use the export feature):</p>
+    <ul>
+      <li>Shortcut list (names, URLs, icons and colors)</li>
+      <li>Search engine list and default engine</li>
+      <li>Wallpaper settings (including base64 data of locally uploaded wallpapers, compressed)</li>
+      <li>Weather settings (city name and coordinates, temperature unit)</li>
+      <li>Widget layout and widget data (to-do items, notes text, pomodoro timer state, translation languages, chosen trending source, system monitor settings)</li>
+      <li>Appearance and general preferences (interface language, clock, greeting nickname, etc.)</li>
+    </ul>
+
+    <h2>Permissions</h2>
+    <table>
+      <tr><th>Permission</th><th>Purpose</th></tr>
+      <tr><td><code>storage</code> / <code>unlimitedStorage</code></td><td>Save the personalization above locally in the browser. Wallpaper data — locally uploaded backgrounds, plus online wallpapers and live-wallpaper videos downloaded into the extension's cache — can exceed the default 10&nbsp;MB quota, so <code>unlimitedStorage</code> is required to keep them. Nothing is uploaded; the extension has no server</td></tr>
+      <tr><td><code>bookmarks</code></td><td>Read <strong>only</strong> when you explicitly use "Import bookmarks" (reads the bookmark tree and converts it to shortcut cards), "Export bookmarks as HTML", or the "Bookmarks" widget (which lists your bookmarks inside the new tab page so you can search and open them). Write <strong>only</strong> after you switch on the optional "Mirror shortcuts to the bookmark bar" setting — <strong>off by default</strong> — which keeps a mirror of your new-tab shortcut groups in the bookmark bar; while it is on, the extension creates, renames, moves and deletes those mirrored folders and items as you edit them. Your bookmarks are never uploaded anywhere</td></tr>
+      <tr><td><code>favicon</code></td><td>Show the real icon of the sites you saved. The icon is read first from your browser's own icon cache (which requires this permission and makes no network request at all); for a site your browser has not seen yet, the icon is loaded from that site's <code>/favicon.ico</code>, with a public icon service as a last resort. Only the icon image itself is read — never your browsing history</td></tr>
+      <tr><td><code>system.cpu</code> / <code>system.memory</code> / <code>system.storage</code></td><td>The "system monitor" bar at the bottom of the page — <strong>on by default</strong>, switchable off in Settings. Reads your overall CPU usage, memory used/total and disk used/total so you can see them at a glance. Shown locally only: no history is kept and nothing is uploaded</td></tr>
+      <tr><td><code>geolocation</code></td><td>Used only by the weather widget (and the small weather badge next to the clock), which is set to "auto location" by default, to read your current coordinates and show the weather of the city you are in. Coordinates are never sent anywhere except the weather/city-name services listed below, and are only cached in your browser for up to 30 minutes. Switch the weather location mode to "Choose city" and the extension stops requesting your location entirely</td></tr>
+      <tr><td><code>contextMenus</code></td><td>Adds a single "Add to SimNewTab Home" item to the page/link right-click menu. Clicking it hands the page (or the link) you right-clicked to the new tab page's "Add shortcut" form. Nothing else is added to the menu, and the menu item never reads page content</td></tr>
+      <tr><td><code>activeTab</code></td><td>Used only at the moment you click that right-click menu item, to read the current tab's URL and title and pre-fill the shortcut form. <code>activeTab</code> is granted for that single user action only, so the extension never holds a standing permission to read your browsing history</td></tr>
+      <tr><td><code>host_permissions</code> (<code>cn.bing.com</code> / <code>www.bing.com</code>)</td><td>Fetch the "Bing daily wallpaper" and the "Curated photos" gallery (both are Bing image URLs), and nothing else. No website content you visit is read</td></tr>
+      <tr><td><code>host_permissions</code> (<code>top.baidu.com</code>)</td><td>Used only when you add the "Trending" widget and pick "Baidu Realtime" as its source, to fetch the public trending list (headlines and links). No personal data is sent</td></tr>
+      <tr><td><code>host_permissions</code> (<code>www.flightstats.com</code>)</td><td>Used only when you add the "Flight" widget, to look up the status of the flight number you type</td></tr>
+      <tr><td><code>host_permissions</code> (<code>search.12306.cn</code> / <code>kyfw.12306.cn</code> / <code>www.12306.cn</code>)</td><td>Used only when you add the "Train" widget, to look up the China Railway train you type and its punctuality</td></tr>
+      <tr><td><code>host_permissions</code> (<code>http://*/*</code> and <code>https://*/*</code>)</td><td>A general grant for three cases where the address is chosen by you and therefore cannot be listed in advance: ① when you paste a URL into "Add shortcut", the page's <code>&lt;title&gt;</code> is read to pre-fill the name; ② image URLs that you type yourself (a custom shortcut icon, or a custom/online wallpaper); ③ the "system monitor" bar connecting to LiteMonitor running on your own computer or LAN (default <code>http://localhost:5000</code>). These permissions are never used to read page content, to inject scripts, or to collect your browsing history</td></tr>
+    </table>
+
+    <h2>Feature-Related Network Requests (Third-Party Services)</h2>
+    <p>The requests below are sent directly by your browser (or, for services that do not send CORS headers, by the extension's background service worker on your behalf) to the corresponding public services. They carry only the minimum parameters needed for the feature and nothing that identifies you personally:</p>
+    <table>
+      <tr><th>Feature</th><th>Service</th><th>What is sent</th></tr>
+      <tr><td>Weather data &amp; 3-day forecast</td><td>Open-Meteo (api.open-meteo.com)</td><td>Coordinates of the selected city</td></tr>
+      <tr><td>City search</td><td>Open-Meteo (geocoding-api.open-meteo.com)</td><td>The city name you type</td></tr>
+      <tr><td>Auto-located city name</td><td>BigDataCloud (api.bigdatacloud.net)</td><td>Coordinates from browser geolocation</td></tr>
+      <tr><td>Weather location fallback (when your browser/OS cannot provide a location)</td><td>myip.ipip.net, then freeipapi.com</td><td>Nothing but the request itself. Used only to infer an approximate city from your IP address, so the weather widget still works without device location</td></tr>
+      <tr><td>Bing daily wallpaper</td><td>Microsoft Bing</td><td>A market parameter matching your UI language</td></tr>
+      <tr><td>Curated photos (110 images, 11 categories)</td><td>Microsoft Bing image archive</td><td>Nothing but the image URL — downloaded on demand and cached locally the first time you pick one. One default background image is bundled with the extension</td></tr>
+      <tr><td>Random wallpapers</td><td>Lorem Picsum (picsum.photos)</td><td>A random seed</td></tr>
+      <tr><td>Live wallpapers (20 video loops)</td><td>Mixkit (assets.mixkit.co)</td><td>Nothing but the video URL itself. These are royalty-free HD video loops (up to 4K) streamed on demand and cached locally when you apply one; no video files are bundled in the extension</td></tr>
+      <tr><td>Weather widget</td><td>Same Open-Meteo endpoints as above</td><td>Coordinates of the selected city — fetched when the page opens and then refreshed automatically (every 10 minutes, or when you come back to the tab) so the reading stays current. There is no manual refresh button</td></tr>
+      <tr><td>Clock weather (the small weather badge next to the clock)</td><td>Same Open-Meteo endpoints as above</td><td>Coordinates of the selected city — fetched once per new tab page, then auto-refreshed on the same schedule as above (it shares one request with the weather widget). It is <strong>on by default</strong> and can be switched off in Settings → General → "Weather by the clock", after which no request is made</td></tr>
+      <tr><td>Calendar &amp; off-work countdown widgets</td><td>timor.tech (holiday API)</td><td>Nothing but the request itself — fetched once per year (cached), to display public holidays and adjusted workdays. The off-work countdown uses it to tell a real holiday from a make-up workday, so it is requested whenever that widget is shown (it is part of the default set)</td></tr>
+      <tr><td>Translate widget</td><td>MyMemory (api.mymemory.translated.net)</td><td>The text you type and your chosen language pair — sent <strong>automatically as you type</strong> (debounced: once 650 ms after you stop typing) and whenever you change the language pair</td></tr>
+      <tr><td>Trending widget (Baidu)</td><td>top.baidu.com</td><td>Nothing but the request itself (public trending list)</td></tr>
+      <tr><td>Trending widget (GitHub / Hacker News)</td><td>api.github.com / hn.algolia.com</td><td>Nothing but the request itself (public trending list)</td></tr>
+      <tr><td>Trending widget (custom source)</td><td>The JSON endpoint URL you enter</td><td>Nothing but the request itself</td></tr>
+      <tr><td>Daily quote (greeting)</td><td>Hitokoto (v1.hitokoto.cn)</td><td>Nothing but the request itself (a public quote of the day)</td></tr>
+      <tr><td>Stocks widget (A-shares / US)</td><td>Tencent Finance (qt.gtimg.cn)</td><td>Only the ticker symbols you configure — sent <strong>only if you add the Stocks widget</strong>, every 30 seconds, and nothing else</td></tr>
+      <tr><td>Exchange-rate widget</td><td>open.er-api.com</td><td>Only the base currency code (e.g. <code>USD</code>) — sent <strong>only if you add the Exchange-rate widget</strong>, every 10 minutes, and nothing else</td></tr>
+      <tr><td>Flight widget</td><td>FlightStats (www.flightstats.com)</td><td>Only the flight number you type — sent <strong>only if you add the Flight widget</strong></td></tr>
+      <tr><td>Train widget</td><td>China Railway 12306</td><td>Only the train number and date you type — sent <strong>only if you add the Train widget</strong></td></tr>
+      <tr><td>System monitor bar (hardware stats)</td><td>LiteMonitor, running on your own computer or LAN (default <code>http://localhost:5000</code>)</td><td>Nothing but the request itself. This stays inside your own network and never reaches the internet; CPU, memory and disk are read directly through the browser's <code>system.*</code> APIs when no local service is reachable</td></tr>
+      <tr><td>Calculator widget</td><td>No request at all</td><td>Arithmetic is computed entirely on your device</td></tr>
+      <tr><td>Shortcut icons</td><td>Your browser's own icon cache first; then the site's own <code>/favicon.ico</code>; then a public icon service (favicon.im) as a last resort</td><td>Nothing but the icon image. Sites the browser has already seen are served entirely from the local cache with no network request</td></tr>
+      <tr><td>Custom shortcut icon (image URL)</td><td>The image URL you paste</td><td>Loaded directly by the browser, only for that shortcut</td></tr>
+      <tr><td>Web wallpapers</td><td>The wallpaper URL you set</td><td>Loaded directly by the browser</td></tr>
+    </table>
+    <div class="highlight"><p><strong>About location</strong>: the weather widget uses "auto location" by default. The extension declares the <code>geolocation</code> permission and asks the browser for your coordinates when the weather widget or the clock weather badge is displayed; the browser (and your operating system) stays in control of the permission and you can deny it at any time. The coordinates are used solely to query weather and the city name from the services above and are never stored on any server — they are cached in your own browser for at most 30 minutes so that opening a new tab does not re-locate you every time. If location is unavailable, the extension falls back to an approximate city inferred from your IP address, and then to a city you can pick yourself; switch the location mode to "Choose city" and the extension stops requesting your location entirely.</p></div>
+
+    <h2>Exporting and Deleting Your Data</h2>
+    <ul>
+      <li>In Settings → Data you can export all settings as a JSON file, export your browser bookmarks as an HTML file, or reset to defaults. Exported files are yours to keep.</li>
+      <li>Uninstalling the extension automatically removes all data stored locally by the browser.</li>
+    </ul>
+
+    <h2>Children's Privacy</h2>
+    <p>This extension is not directed at children and does not knowingly collect information from children.</p>
+
+    <h2>Contact</h2>
+    <p>If you have questions about this policy, please reach out via the support contact listed on the extension's store page.</p>
+
+    <h2>Changes to This Policy</h2>
+    <p>If this policy changes, we will update the date on this page and revise the content accordingly.</p>
+  </div>
+
+  <!-- ============ CHINESE ============ -->
+  <div id="page-zh" class="card" style="display:none" lang="zh-CN">
+    <h1>SimNewTab 隐私政策</h1>
+    <p class="updated">最后更新日期：2026 年 9 月 26 日</p>
+    <p>SimNewTab（以下简称「本扩展」）是一款浏览器新标签页扩展。我们非常重视你的隐私。本政策说明本扩展如何处理数据。</p>
+
+    <h2>总览</h2>
+    <div class="highlight"><p><strong>本扩展没有账号系统、没有自己的服务器、没有统计埋点、没有广告、没有追踪代码。</strong></p>
+    <p>你的全部个性化配置仅保存在你自己的浏览器本地存储（<code>chrome.storage.local</code>）中，不会上传到我们的服务器。扩展运行中会按需向下列第三方公开服务发起请求，这些请求仅用于提供相应功能，本扩展不向任何一方发送你的身份信息。</p></div>
+
+    <h2>数据的本地存储</h2>
+    <p>以下数据仅存于浏览器本地，不会离开你的设备（除非你主动使用导出功能）：</p>
+    <ul>
+      <li>快捷方式列表（名称、网址、图标与配色）</li>
+      <li>搜索引擎列表与默认引擎</li>
+      <li>壁纸设置（含本地上传壁纸压缩后的 base64 数据）</li>
+      <li>天气设置（城市名与坐标、温度单位）</li>
+      <li>小组件布局与组件数据（待办事项、笔记正文、番茄钟计时状态、翻译语言、所选热搜数据源、监控条设置）</li>
+      <li>外观与通用偏好（界面语言、时钟、问候语昵称等）</li>
+    </ul>
+
+    <h2>权限用途说明</h2>
+    <table>
+      <tr><th>权限</th><th>用途</th></tr>
+      <tr><td><code>storage</code> / <code>unlimitedStorage</code></td><td>在浏览器本地保存上述个性化配置。壁纸数据——你本地上传的背景图，加上下载进扩展缓存的在线壁纸与动态壁纸视频——会超出 storage 默认的 10&nbsp;MB 配额，因此需要 <code>unlimitedStorage</code> 才能存下。数据不会上传，扩展自身没有服务器</td></tr>
+      <tr><td><code>bookmarks</code></td><td>读取<strong>只</strong>发生在你主动使用时：「导入书签」（读取书签树并转换为快捷方式）、「导出书签 HTML」、或添加「书签管理」小组件。写入<strong>只</strong>发生在你开启可选的「系统书签同步」开关之后——<strong>该开关默认关闭</strong>。开启后扩展会把新标签页的快捷方式分组镜像到书签栏，并随你的增删改同步创建、重命名、移动和删除它自己镜像出来的那些文件夹与条目。你的书签不会上传到任何地方</td></tr>
+      <tr><td><code>favicon</code></td><td>用于显示你收藏站点的真实图标。取图第一优先是浏览器自己维护的图标缓存（声明此权限后该端点才可用，读的是本机数据、不产生任何网络请求）；浏览器尚未见过的站点，才会去该站点根路径取 <code>/favicon.ico</code>，最后才回退到公共图标服务。整个过程只读取图标图片本身，不读取也不保存任何浏览记录</td></tr>
+      <tr><td><code>system.cpu</code> / <code>system.memory</code> / <code>system.storage</code></td><td>用于页面底部的「硬件监控条」——<strong>默认开启</strong>，可在设置里关掉。读取整机 CPU 占用率、内存已用 / 总量、硬盘已用 / 总量，让你一眼看到当前机器状态。数据只在本机显示，不保存历史、不上传</td></tr>
+      <tr><td><code>geolocation</code></td><td>仅用于天气小组件（以及时钟旁的小天气徽标）——天气默认就是「自动定位」，用它读取当前坐标以显示你所在城市的天气。坐标除天气 / 城市名服务外不发送给任何地方，且只在你本机缓存最多 30 分钟；把天气的定位方式改成「手动选择」后，扩展完全不再请求定位</td></tr>
+      <tr><td><code>contextMenus</code></td><td>在网页与链接的右键菜单中增加一项「添加到 SimNewTab 首页」。点击后把你右键的页面（或链接）交给新标签页的「添加快捷方式」表单预填。菜单里不加其他任何项，该菜单项也不读取网页内容</td></tr>
+      <tr><td><code>activeTab</code></td><td>仅在你点击上面那个右键菜单项的瞬间，用于读取当前标签页的网址与标题以预填快捷方式表单。<code>activeTab</code> 只对这一次用户主动操作临时生效，因此扩展不会常驻「读取浏览记录」的权限</td></tr>
+      <tr><td><code>host_permissions</code>（<code>cn.bing.com</code> / <code>www.bing.com</code>）</td><td>仅用于获取「Bing 每日一图」与「精选图片」壁纸（两者都是 Bing 的图片地址），不作他用。不读取你访问的任何网站内容</td></tr>
+      <tr><td><code>host_permissions</code>（<code>top.baidu.com</code>）</td><td>仅当你添加「热搜」小组件并选择「百度热搜」数据源时，用于获取公开热榜（标题与链接），不发送任何个人信息</td></tr>
+      <tr><td><code>host_permissions</code>（<code>www.flightstats.com</code>）</td><td>仅当你添加「航班」小组件时，用于查询你输入航班号的实时状态</td></tr>
+      <tr><td><code>host_permissions</code>（<code>search.12306.cn</code> / <code>kyfw.12306.cn</code> / <code>www.12306.cn</code>）</td><td>仅当你添加「列车」小组件时，用于查询你输入的车次及其正晚点</td></tr>
+      <tr><td><code>host_permissions</code>（<code>http://*/*</code> 与 <code>https://*/*</code>）</td><td>通用授权，用于三处「地址由你自己决定、无法预先枚举域名」的场景：① 你在「添加快捷方式」里粘贴一个网址时，读取该网页的 <code>&lt;title&gt;</code> 自动填充名称；② 你自己填写的图片链接（自定义快捷方式图标、自定义 / 在线壁纸）；③ 「硬件监控条」连接你自建在本机或局域网内的 LiteMonitor 监控服务（默认 <code>http://localhost:5000</code>）。这些权限绝不用于读取网页内容、注入脚本或收集你的浏览记录</td></tr>
+    </table>
+
+    <h2>功能性网络请求（第三方服务）</h2>
+    <p>以下请求由浏览器（对于不返回 CORS 头的服务，则由扩展的后台 Service Worker 代发）直接发往对应的公开服务，仅包含实现该功能所需的最少参数，不包含任何可识别个人身份的信息：</p>
+    <table>
+      <tr><th>场景</th><th>服务</th><th>发送的内容</th></tr>
+      <tr><td>天气数据与三日预报</td><td>Open-Meteo（api.open-meteo.com）</td><td>所选城市的经纬度坐标</td></tr>
+      <tr><td>城市搜索</td><td>Open-Meteo（geocoding-api.open-meteo.com）</td><td>你输入的城市名称</td></tr>
+      <tr><td>自动定位城市名</td><td>BigDataCloud（api.bigdatacloud.net）</td><td>浏览器定位得到的经纬度坐标</td></tr>
+      <tr><td>天气定位兜底（浏览器 / 系统取不到位置时）</td><td>myip.ipip.net，其次 freeipapi.com</td><td>仅请求本身，不含任何个人信息。仅用于根据 IP 推断大致城市，让天气在设备定位不可用时仍能工作</td></tr>
+      <tr><td>Bing 每日一图</td><td>Microsoft Bing</td><td>界面语言对应的市场参数</td></tr>
+      <tr><td>精选图片（11 类型共 110 张）</td><td>Microsoft Bing 图片归档</td><td>仅图片直链本身——你在选某张时按需下载并缓存到本地。另有 1 张默认背景图随扩展打包</td></tr>
+      <tr><td>随机壁纸</td><td>Lorem Picsum（picsum.photos）</td><td>随机 seed</td></tr>
+      <tr><td>动态壁纸（20 段视频循环）</td><td>Mixkit（assets.mixkit.co）</td><td>仅视频直链本身。这些是免费授权的 HD 视频循环（最高 4K），在你应用时按需流式加载并缓存到本地；扩展包里不打包任何视频文件</td></tr>
+      <tr><td>天气小组件</td><td>同上的 Open-Meteo 接口</td><td>所选城市的经纬度坐标——打开标签页时拉取一次，之后<strong>自动刷新</strong>（每 10 分钟一次，或你切回该标签页时补刷一次），保证显示的是当前天气；卡片上没有手动刷新按钮</td></tr>
+      <tr><td>时钟天气（时钟旁的小天气徽标）</td><td>同上的 Open-Meteo 接口</td><td>所选城市的经纬度坐标——每个新标签页拉取一次，之后与天气小组件共用同一次自动刷新。该功能<strong>默认开启</strong>，可在「设置 → 通用 → 时钟天气」里关掉，关掉后不再发起任何请求</td></tr>
+      <tr><td>日历小组件、下班倒计时小组件</td><td>timor.tech（节假日接口）</td><td>仅请求本身，不含任何个人信息——按年份拉取一次并缓存，用于展示法定节假日与调休补班。下班倒计时用它区分「真放假」与「调休补班」，因此该组件一显示就会请求（它在默认组件里）</td></tr>
+      <tr><td>翻译小组件</td><td>MyMemory（api.mymemory.translated.net）</td><td>你输入的文本与所选语言对——<strong>输入后自动发送</strong>（停止输入 650ms 才发一次，不是每个按键都发），切换语言方向时也会发送</td></tr>
+      <tr><td>热搜小组件（百度）</td><td>top.baidu.com</td><td>仅请求本身，不含任何个人信息</td></tr>
+      <tr><td>热搜小组件（GitHub / Hacker News）</td><td>api.github.com / hn.algolia.com</td><td>仅请求本身，不含任何个人信息</td></tr>
+      <tr><td>热搜小组件（自定义源）</td><td>你填写的 JSON 接口地址</td><td>仅请求本身，不含任何个人信息</td></tr>
+      <tr><td>每日一言（问候语）</td><td>Hitokoto 一言（v1.hitokoto.cn）</td><td>仅请求本身，不含任何个人信息（返回公开的每日一句）</td></tr>
+      <tr><td>股票小组件（A 股 / 美股）</td><td>腾讯财经（qt.gtimg.cn）</td><td>仅你在组件里配置的股票代码——<strong>只在添加了股票组件时才发送</strong>，每 30 秒一次，不含任何个人信息</td></tr>
+      <tr><td>汇率小组件</td><td>open.er-api.com</td><td>仅基准货币代码（如 <code>USD</code>）——<strong>只在添加了汇率小组件时才发送</strong>，每 10 分钟一次，不含任何个人信息</td></tr>
+      <tr><td>航班小组件</td><td>FlightStats（www.flightstats.com）</td><td>仅你输入的航班号——<strong>只在添加了航班组件时才发送</strong></td></tr>
+      <tr><td>列车小组件</td><td>中国铁路 12306</td><td>仅你输入的车次与日期——<strong>只在添加了列车组件时才发送</strong></td></tr>
+      <tr><td>硬件监控条（硬件状态）</td><td>LiteMonitor，运行在你自己的电脑或局域网内（默认 <code>http://localhost:5000</code>）</td><td>仅请求本身。请求始终在你自己的网络内部流转、不会进入公网；若本机没有该服务，CPU、内存、硬盘则通过浏览器自带的 <code>system.*</code> 接口直接读取</td></tr>
+      <tr><td>计算器小组件</td><td>不发出任何请求</td><td>四则运算完全在本机计算</td></tr>
+      <tr><td>快捷方式图标</td><td>优先用浏览器自己的图标缓存；其次取站点自己的 <code>/favicon.ico</code>；最后才回退到公共图标服务（favicon.im）</td><td>仅图标图片本身。浏览器已经见过的站点完全由本地缓存提供、不产生任何网络请求</td></tr>
+      <tr><td>自定义图标（图片 URL）</td><td>你填写的图片地址</td><td>仅该条快捷方式由浏览器直接加载</td></tr>
+      <tr><td>网络壁纸</td><td>你设置的壁纸地址</td><td>由浏览器直接加载</td></tr>
+    </table>
+    <div class="highlight"><p><strong>关于定位</strong>：天气默认就是「自动定位」。扩展声明了 <code>geolocation</code> 权限，在显示天气小组件或时钟旁的小天气徽标时向浏览器读取当前坐标；授权与否始终由浏览器（及你的操作系统）掌握，你可以随时拒绝。坐标仅用于向上述天气服务查询天气与城市名，不会被存储到任何服务器——只在你本机缓存最多 30 分钟，这样每开一个新标签页不必重新定位。定位不可用时，扩展会依次回退到「按 IP 推断的大致城市」和你自己选定的城市；把定位方式改成「手动选择」后，扩展完全不再请求定位。</p></div>
+
+    <h2>数据的导出与删除</h2>
+    <ul>
+      <li>你可以在 设置 → 数据 中一键导出全部配置（JSON 文件）、导出浏览器书签（HTML 文件）或恢复默认。导出文件由你自行保管。</li>
+      <li>卸载本扩展时，浏览器会自动清除本地存储的全部数据。</li>
+    </ul>
+
+    <h2>儿童隐私</h2>
+    <p>本扩展不面向儿童，也不会故意收集儿童的信息。</p>
+
+    <h2>联系方式</h2>
+    <p>如对本政策有任何疑问，请通过扩展商店页面提供的支持联系方式与我们联系。</p>
+
+    <h2>政策变更</h2>
+    <p>如政策有变更，我们会更新本页面的日期并修订内容。</p>
+  </div>
+
+  <footer>SimNewTab &middot; Privacy Policy</footer>
+</div>
+<script>
+  const links = document.querySelectorAll('.lang-switch a');
+  function show(lang) {
+    document.getElementById('page-en').style.display = lang === 'en' ? '' : 'none';
+    document.getElementById('page-zh').style.display = lang === 'zh' ? '' : 'none';
+    links.forEach(a => a.classList.toggle('active', a.dataset.lang === lang));
+    const hash = lang === 'zh' ? '#zh' : '';
+    history.replaceState(null, '', location.pathname + hash);
+  }
+  links.forEach(a => a.addEventListener('click', e => { e.preventDefault(); show(a.dataset.lang); }));
+  if (location.hash === '#zh') show('zh');
+</script>
+</body>
+</html>
